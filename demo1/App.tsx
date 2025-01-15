@@ -22,9 +22,8 @@ import {
   Header,
 } from 'react-native/Libraries/NewAppScreen';
 
-
-import NFButton from '@nativeframe/react-native-native-frame/specs/NFButtonNativeComponent';
-import NFVideoPlayer from '@nativeframe/react-native-native-frame/specs/NFVideoPlayerNativeComponent';
+import { NFButton } from '@nativeframe/react-native-native-frame';
+import { NFVideoPlayer } from '@nativeframe/react-native-native-frame';
 
 function App(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
