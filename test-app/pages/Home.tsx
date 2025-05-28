@@ -1,5 +1,4 @@
 import React from 'react';
-import type { PropsWithChildren } from 'react';
 import {
   Alert,
   Image,
@@ -16,9 +15,10 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { NFButton, NFVideoPlayer } from '@nativeframe/react-native-native-frame';
+import { NFButton } from '@nativeframe/react-native-native-frame';
 
-function App(): React.JSX.Element {
+type Props = { navigation: any }
+function Home(props: Props): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
   const backgroundStyle = {
@@ -38,16 +38,7 @@ function App(): React.JSX.Element {
           style={{
             backgroundColor: isDarkMode ? Colors.black : Colors.white,
           }}>
-          <Text
-            style={[
-              styles.sectionTitleLarge,
-              {
-                color: isDarkMode ? Colors.white : Colors.black,
-              }, styles.sectionContainer, { textAlign: 'center' }
-            ]}>
-            ICF Messenger (React Native)
-          </Text>
-
+          <View style={styles.divider} />
           <View style={styles.container}>
             <Image source={require('./../imgs/msg.png')} style={styles.logo} />
           </View>
@@ -65,59 +56,17 @@ function App(): React.JSX.Element {
 
 
           <View style={styles.container}>
-            <NFButton text="Watch" style={styles.button} onClicked={() => { Alert.alert('hey') }} />
-            <NFButton text="Go Live" style={styles.button} />
-            <NFButton text="Cam to Cam" style={styles.button} />
+            <NFButton text="Watch" style={styles.button} onClicked={() => { props.navigation.navigate('Watch'); }} />
+            <NFButton text="Go Live" style={styles.button} onClicked={() => {props.navigation.navigate('Go Live');}} />
+            <NFButton text="Cam to Cam" style={styles.button} onClicked={() => {Alert.alert('Tested honey');}}  />
           </View>
-          {/* <Section title="Manifest Player">
-            <NFVideoPlayer hls="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" style={styles.player} />
-          </Section> */}
-
-          <Section title="Video Player">
-            <NFVideoPlayer hls="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" style={styles.player} />
-          </Section>
         </View>
       </ScrollView>
     </SafeAreaView>
   );
 }
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({ children, title }: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
-
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    marginBottom: 32,
-    paddingHorizontal: 24,
-  },
   sectionTitle: {
     fontSize: 15,
     fontWeight: '400',
@@ -125,11 +74,6 @@ const styles = StyleSheet.create({
   sectionTitleLarge: {
     fontSize: 19,
     fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
   },
   highlight: {
     fontWeight: '700',
@@ -157,6 +101,9 @@ const styles = StyleSheet.create({
     width: 165,
     height: 100,
   },
+  divider: {
+    height: 20,
+  },
 });
 
-export default App;
+export default Home;

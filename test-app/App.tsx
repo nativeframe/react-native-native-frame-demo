@@ -1,32 +1,30 @@
 import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
-import {
-  SafeAreaView,
-  StatusBar,
-  useColorScheme,
-} from 'react-native';
-
-import {
-  Colors,
-} from 'react-native/Libraries/NewAppScreen';
-
+const Stack = createNativeStackNavigator();
 import Home from './pages/Home';
+import Watch from './pages/Watch';
+import Broadcast from './pages/Broadcast';
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter
-  };
-
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <Home />
-    </SafeAreaView>
+    <NavigationContainer>
+        <Stack.Navigator>
+          <Stack.Screen
+            name="ICF Messenger (React Native)"
+            component={Home}
+          />
+            <Stack.Screen
+            name="Watch"
+            component={Watch}
+          />
+           <Stack.Screen
+            name="Go Live"
+            component={Broadcast}
+          />
+        </Stack.Navigator>
+      </NavigationContainer>
   );
 }
 

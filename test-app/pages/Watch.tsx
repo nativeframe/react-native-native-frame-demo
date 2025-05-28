@@ -1,87 +1,66 @@
 import React from 'react';
-import type { PropsWithChildren } from 'react';
 import {
+  Alert,
+  DeviceEventEmitter,
+  NativeEventEmitter,
+  NativeModules,
+  Platform,
   SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
-  Text,
   useColorScheme,
-  View,
 } from 'react-native';
 
 import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { NFVideoPlayer } from '@nativeframe/react-native-native-frame';
+import { VideoClient, types } from '@video/video-client-core';
+import { NFManifestPlayer } from '@nativeframe/react-native-native-frame';
 
 function Watch(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
+  const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
+  //crypto.randomUUID()
+  const vcOptions: types.VideoClientOptions = {
+    backendEndpoints: ['https://dev1.devspace.lsea4.livelyvideo.tv'],
+    displayName: "Test-App Demo (React Native)",
+    loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
+    userId: 'bones',
+  };
+
+  const videoClient = new VideoClient(vcOptions);
+
+  emitter.addListener("manifestPlayer.uri.onChanged", async () => {
+
+    try {
+      const playerOptions: types.PlayerOptions = {
+        autoPlay: true,
+        muted: false,
+        players: ['webrtc', 'native-hls', 'hlsjs', 'flvhttp'],
+        retryCall: true,
+      };
+      const player = await videoClient.requestPlayer('https://manifest2.dev3.devspace.lsea4.livelyvideo.tv/live/llamas.json?accessToken=0737455974284d1fb1f924a7194a4331', playerOptions);
+      player.on("playerAccessDenied", () => {
+        Alert.alert('Access Denied')
+      });
+      player.on('driver', (d: string) => {
+        console.log('new driver: ' + d)
+      })
+    } catch (err) {
+      throw new Error(`Error initializing player: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  });
+
   const backgroundStyle = {
     backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
+    padding: 10,
   };
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <View
-          style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
-          }}>
-          <Text
-            style={[
-              styles.sectionTitleLarge,
-              {
-                color: isDarkMode ? Colors.white : Colors.black,
-              }, styles.sectionContainer, { textAlign: 'center' }
-            ]}>
-            Watch
-          </Text>
-
-          <Section title="Video Player">
-            <NFVideoPlayer hls="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" style={styles.player} />
-          </Section>
-        </View>
-      </ScrollView>
+      <NFManifestPlayer style={styles.player} manifestUri="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" />
     </SafeAreaView>
-  );
-}
-
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
-
-function Section({ children, title }: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
   );
 }
 
@@ -122,13 +101,8 @@ const styles = StyleSheet.create({
     height: 60,
   },
   player: {
-    width: 200,
-    height: 150,
-    marginBottom: 100,
-  },
-  logo: {
-    width: 165,
-    height: 100,
+    height: '100%',
+    textAlign: 'center',
   },
 });
 
