@@ -6,6 +6,7 @@ const Stack = createNativeStackNavigator();
 import Home from './pages/Home';
 import Watch from './pages/Watch';
 import Broadcast from './pages/Broadcast';
+import { LogBox } from 'react-native';
 
 function App(): React.JSX.Element {
   return (
@@ -27,5 +28,7 @@ function App(): React.JSX.Element {
       </NavigationContainer>
   );
 }
+
+LogBox.ignoreAllLogs(true);
 
 export default App;

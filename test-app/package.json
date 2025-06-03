@@ -9,9 +9,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@nativeframe/react-native-native-frame": "0.9.116",
+    "@nativeframe/react-native-native-frame": "0.9.121",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/native-stack": "^7.3.13",
+    "@videomobile/react-native-webrtc": "^124.0.4",
     "react": "18.3.1",
     "react-native": "0.76.6",
     "react-native-safe-area-context": "^5.4.1",
