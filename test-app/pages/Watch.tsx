@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import {
   Alert,
   DeviceEventEmitter,
@@ -16,9 +16,17 @@ import {
 
 import { VideoClient, types } from '@video/video-client-core';
 import { NFManifestPlayer } from '@nativeframe/react-native-native-frame';
+import { ManifestJson } from '@video/video-client-core/lib/api';
 
 function Watch(): React.JSX.Element {
+  const [source, setSource] = useState('');
   const isDarkMode = useColorScheme() === 'dark';
+
+  const adapter = require("@video/video-client-core").adapter;
+  const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
+
+  adapter.implement(new ReactNativeDevice());
+
 
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   //crypto.randomUUID()
@@ -31,8 +39,8 @@ function Watch(): React.JSX.Element {
 
   const videoClient = new VideoClient(vcOptions);
 
-  emitter.addListener("manifestPlayer.uri.onChanged", async () => {
-
+  emitter.addListener("manifestPlayer.uri.onChanged", async (opts: {uri: string}) => {
+console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
     try {
       const playerOptions: types.PlayerOptions = {
         autoPlay: true,
@@ -40,13 +48,31 @@ function Watch(): React.JSX.Element {
         players: ['webrtc', 'native-hls', 'hlsjs', 'flvhttp'],
         retryCall: true,
       };
-      const player = await videoClient.requestPlayer('https://manifest2.dev3.devspace.lsea4.livelyvideo.tv/live/llamas.json?accessToken=0737455974284d1fb1f924a7194a4331', playerOptions);
+      const player = videoClient.requestPlayer(opts.uri, playerOptions);
       player.on("playerAccessDenied", () => {
         Alert.alert('Access Denied')
       });
       player.on('driver', (d: string) => {
-        console.log('new driver: ' + d)
-      })
+        console.log('new driver: ' + d);
+      });
+      (player as any).provider?.on('source', (manifest: ManifestJson) => {
+        setSource(manifest.formats['mp4-hls']?.manifest ?? '');
+        // const format = manifest.formats?.[this.state.format];
+
+        // if (isGenericFormat(format) && format.manifest) {
+        //   const currentQualityLayer = ((player as any)?.currentPlayer as CorePlayer)?.currentQuality?.layer;
+
+        //   let source: string;
+        //   if (currentQualityLayer != null && currentQualityLayer.id !== '' && (player as any)?.preferredLevel) {
+        //     source = currentQualityLayer.id.toString();
+        //   } else {
+        //     source = format.manifest;
+        //   }
+
+        //    console.log('new driver source: ' + source)
+        // }
+      });
+      console.log('vdc loaded')
     } catch (err) {
       throw new Error(`Error initializing player: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -59,7 +85,8 @@ function Watch(): React.JSX.Element {
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      <NFManifestPlayer style={styles.player} manifestUri="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" />
+      {/* <NFManifestPlayer style={styles.player} manifestUri="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" /> */}
+    <NFManifestPlayer style={styles.player} manifestUri={source} />
     </SafeAreaView>
   );
 }
