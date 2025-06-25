@@ -27,8 +27,6 @@ function Watch(): React.JSX.Element {
 
   adapter.implement(new ReactNativeDevice());
 
-
-  const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   //crypto.randomUUID()
   const vcOptions: types.VideoClientOptions = {
     backendEndpoints: ['https://dev1.devspace.lsea4.livelyvideo.tv'],
@@ -39,6 +37,7 @@ function Watch(): React.JSX.Element {
 
   const videoClient = new VideoClient(vcOptions);
 
+  const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   emitter.addListener("manifestPlayer.uri.onChanged", async (opts: {uri: string}) => {
 console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
     try {
@@ -92,41 +91,6 @@ console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
 }
 
 const styles = StyleSheet.create({
-  sectionContainer: {
-    marginTop: 32,
-    marginBottom: 32,
-    paddingHorizontal: 24,
-  },
-  sectionTitle: {
-    fontSize: 15,
-    fontWeight: '400',
-  },
-  sectionTitleLarge: {
-    fontSize: 19,
-    fontWeight: '600',
-  },
-  sectionDescription: {
-    marginTop: 8,
-    fontSize: 18,
-    fontWeight: '400',
-  },
-  highlight: {
-    fontWeight: '700',
-  },
-  container: {
-    marginHorizontal: 'auto',
-    paddingHorizontal: 24,
-    textAlign: 'center',
-  },
-  containerPadded: {
-    marginHorizontal: 'auto',
-    marginVertical: 24,
-    textAlign: 'center',
-  },
-  button: {
-    width: 200,
-    height: 60,
-  },
   player: {
     height: '100%',
     textAlign: 'center',

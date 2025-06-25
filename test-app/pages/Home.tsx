@@ -1,6 +1,5 @@
 import React from 'react';
 import {
-  Alert,
   Image,
   SafeAreaView,
   ScrollView,
@@ -58,7 +57,7 @@ function Home(props: Props): React.JSX.Element {
           <View style={styles.container}>
             <NFButton text="Watch" style={styles.button} onClicked={() => { props.navigation.navigate('Watch'); }} />
             <NFButton text="Go Live" style={styles.button} onClicked={() => {props.navigation.navigate('Go Live');}} />
-            <NFButton text="Cam to Cam" style={styles.button} onClicked={() => {Alert.alert('Tested honey');}}  />
+            <NFButton text="Cam to Cam" style={styles.button} onClicked={() => {props.navigation.navigate('Cam 2 Cam');}} />
           </View>
         </View>
       </ScrollView>
