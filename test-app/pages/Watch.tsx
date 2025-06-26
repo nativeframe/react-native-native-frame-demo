@@ -27,9 +27,8 @@ function Watch(): React.JSX.Element {
 
   adapter.implement(new ReactNativeDevice());
 
-  //crypto.randomUUID()
   const vcOptions: types.VideoClientOptions = {
-    backendEndpoints: ['https://dev1.devspace.lsea4.livelyvideo.tv'],
+    backendEndpoints: ['https://dev2.devspace.lsea4.livelyvideo.tv'],
     displayName: "Test-App Demo (React Native)",
     loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
     userId: 'bones',
@@ -39,7 +38,6 @@ function Watch(): React.JSX.Element {
 
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   emitter.addListener("manifestPlayer.uri.onChanged", async (opts: {uri: string}) => {
-console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
     try {
       const playerOptions: types.PlayerOptions = {
         autoPlay: true,
@@ -71,7 +69,6 @@ console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
         //    console.log('new driver source: ' + source)
         // }
       });
-      console.log('vdc loaded')
     } catch (err) {
       throw new Error(`Error initializing player: ${err instanceof Error ? err.message : String(err)}`);
     }
@@ -84,7 +81,6 @@ console.log('manifestPlayer.uri.onChanged: ' + JSON.stringify(opts));
 
   return (
     <SafeAreaView style={backgroundStyle}>
-      {/* <NFManifestPlayer style={styles.player} manifestUri="https://ia601606.us.archive.org/15/items/big-buck-bunny-trailer/Big-buck-bunny_trailer.webm" /> */}
     <NFManifestPlayer style={styles.player} manifestUri={source} />
     </SafeAreaView>
   );

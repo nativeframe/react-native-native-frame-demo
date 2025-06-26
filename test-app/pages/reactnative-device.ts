@@ -3,10 +3,7 @@
 import { EventEmitter } from "@video/events-typed";
 import { adapter, types } from "@video/video-client-core";
 import { types as typesMS } from "mediasoup-client";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
-// import NetInfo from "@react-native-community/netinfo";
 import { AppState, Platform } from "react-native";
-// import UserAgent from "react-native-user-agent";
 import {
   mediaDevices,
   mediaDevices as WebRTCMediaDevices,
@@ -27,14 +24,6 @@ class DeviceScreenOrientation implements types.ScreenOrientation {
 
 class DeviceLocalStorage implements types.LocalStorage {
   constructor() {
-    // AsyncStorage.getAllKeys().then((keys) => {
-    //   AsyncStorage.multiGet(keys).then((dataArray) => {
-    //     dataArray.forEach((element) => {
-    //       // index 0 is key. index 1 is value
-    //       this[element[0]] = element[1] ?? "";
-    //     });
-    //   });
-    // });
   }
 
   get length(): number {

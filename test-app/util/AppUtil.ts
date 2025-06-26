@@ -1,6 +1,6 @@
 
 export async function getAuthTokenForDemo(endpoint: string): Promise<string>{
-  const userId = 'bil1';
+  const userId = 'icf-msg-bill';
   const streamKey = 'stream1';
     const resp = await fetch(`${endpoint}/apps/demos/api/demo/v1/access-token`, {
       headers: {
