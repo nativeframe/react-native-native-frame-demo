@@ -13,7 +13,7 @@ import {
   Colors,
 } from 'react-native/Libraries/NewAppScreen';
 
-import { NFBroadcaster, NFBroadcast} from '@nativeframe/react-native-native-frame';
+import { NFBroadcaster, NFBroadcast } from '@nativeframe/react-native-native-frame';
 import { mediaController, types, VideoClient } from '@video/video-client-core';
 import { getAuthTokenForDemo } from '../util/AppUtil';
 import { rnLogger } from './reactnative-log';
@@ -28,78 +28,104 @@ function Broadcast(): React.JSX.Element {
 
   let videoClient: types.VideoClientAPI | undefined;
   let mc: types.MediaStreamControllerAPI | undefined;
+  let call: types.CallAPI;
+  let broadcast: types.BroadcastAPI;
   const adapter = require("@video/video-client-core").adapter;
-    const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
-  
-    adapter.implement(new ReactNativeDevice());
-  
-    const endpoint = 'https://dev2.devspace.lsea4.livelyvideo.tv';
-    //crypto.randomUUID()
-    const uID = 'icf-test';
-    const vcOptions: types.VideoClientOptions = {
-      backendEndpoints: [endpoint],
-      token: async () => {
-        return await getAuthTokenForDemo(endpoint);
-      },
-      displayName: "Test-App Demo (React Native)",
-      loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
-      userId: uID,
-    };
+  const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
 
-   videoClient = new VideoClient(vcOptions);
-    const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
-    
-    emitter.addListener("broadcaster.onBroadcast", async (opts: {uri: string}) => {
-      const call = await videoClient.createCall({
-        userId: uID,
-      });
+  adapter.implement(new ReactNativeDevice());
 
+  const endpoint = 'https://dev2.devspace.lsea4.livelyvideo.tv';
+
+  const uID = 'icf-test';
+  const vcOptions: types.VideoClientOptions = {
+    backendEndpoints: [endpoint],
+    token: async () => {
+      return await getAuthTokenForDemo(endpoint);
+    },
+    displayName: "Test-App Demo (React Native)",
+    loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
+    userId: uID,
+  };
+
+  videoClient = new VideoClient(vcOptions);
+  const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
+
+  emitter.addListener("broadcaster.camera.enable", async (opts: { enable: boolean }) => {
+    if (mc) {
+      mc.videoPaused = !opts.enable;
+    }
+  });
+  emitter.addListener("broadcaster.mic.enable", async (opts: { enable: boolean }) => {
+    if (mc) {
+      mc.audioMuted = !opts.enable;
+    }
+  });
+  emitter.addListener("broadcaster.onBroadcast.pause", async () => {
+    broadcast?.pause();
+  });
+
+  emitter.addListener("broadcaster.onBroadcast.start", async (opts: { uri: string }) => {
+    if (broadcast && broadcast.state === 'active') {
+      return;
+    }
+    if (broadcast && broadcast.state === 'paused') {
+      broadcast.resume();
+      return;
+    }
+
+    if (!mc) {
       try {
         await mediaController.init();
-       mc = await mediaController.requestController();
+        mc = await mediaController.requestController();
       } catch (error) {
         rnLogger.error(error);
       }
+    }
 
-      if(!mc)
-      {
-        return;
-      }
+    if (!mc) {
+      rnLogger.error('could not initialize media controller');
+      return;
+    }
 
-       mc.videoDeviceId = mediaController.videoDevices()[0].deviceId;
-      mc.on('source', (stream) => {
-         NFBroadcast?.webRTC((stream as any).toURL());
-       
+    if (!call || call.state === 'closed') {
+      call = await videoClient.createCall({
+        userId: uID,
       });
-      const b = await call.broadcast(mc, {streamName: 'icf-msg'});
-      
-      b.on('error',(e)=> {
-        console.error(e);
-      });
-      
+    }
+
+    const [device] = mediaController.videoDevices().filter((d) => (d as any).facing === 'front');
+
+    if (device) {
+      mc.videoDeviceId = device.deviceId;
+    } else {
+      rnLogger.error('no front camera(s)');
+    }
+
+    mc.on('source', (stream) => {
+      NFBroadcast?.webRTC((stream as any).toURL());
     });
 
-    emitter.addListener("broadcaster.camera.enable", async (opts: {enable: boolean}) => {
-        if(mc){
-          mc.videoDisabled = !opts.enable;
-        }
-    });
-    emitter.addListener("broadcaster.mic.enable", async (opts: {enable: boolean}) => {
-        if(mc){
-          mc.audioDisabled = !opts.enable;
-        }
+    broadcast = await call.broadcast(mc, { streamName: 'icf-msg' });
+
+    broadcast.on('error', (e) => {
+      rnLogger.error(e);
     });
 
-    useEffect(() => {
+  });
+
+  useEffect(() => {
 
     return () => {
+      mc?.close('component unmount');
+      call?.close('component unmount');
       videoClient?.dispose('component unmount');
     };
   }, []);
-  
+
   return (
     <SafeAreaView style={backgroundStyle}>
-     <NFBroadcaster style={styles.broadcaster} uri="..." />
+      <NFBroadcaster style={styles.broadcaster} uri="..." />
     </SafeAreaView>
   );
 }
