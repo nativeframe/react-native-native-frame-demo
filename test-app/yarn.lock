@@ -1401,10 +1401,10 @@
     "@jridgewell/resolve-uri" "^3.1.0"
     "@jridgewell/sourcemap-codec" "^1.4.14"
 
-"@nativeframe/react-native-native-frame@0.9.155":
-  version "0.9.155"
-  resolved "https://registry.yarnpkg.com/@nativeframe/react-native-native-frame/-/react-native-native-frame-0.9.155.tgz#d170b32212ad3ee4b03fe51ba53422cb9324730b"
-  integrity sha512-236gHGgPieyAkyqh46ryP77Y8JYVomISX8xMvQ4zWGTb5bifbkbkBL62l3UmC1gnDa8omIQcS+UlfdaiNZSVrg==
+"@nativeframe/react-native-native-frame@0.9.164":
+  version "0.9.164"
+  resolved "https://registry.yarnpkg.com/@nativeframe/react-native-native-frame/-/react-native-native-frame-0.9.164.tgz#df21f4442f287f56b5a70e5de5ffa26c2cad874d"
+  integrity sha512-iYY+va/uvMA+Ufl0GbBmISTsyvf8oexxmBsPnkBKI96FmQ+MJoVrJSxGPnMRL5GVI27IRYZyXRy9al36H1SJcQ==
   dependencies:
     "@video/video-client-core" "13.2.0"
     "@videomobile/react-native-webrtc" "^124.0.4"

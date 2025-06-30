@@ -7,7 +7,7 @@ export async function getAuthTokenForDemo(endpoint: string): Promise<string>{
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        scopes: ['conference-owner', 'conference-participant', 'private-broadcaster'],
+        scopes: ['broadcaster', 'private-broadcaster'],
         userId,
         data: {
           displayName: `User ${userId}`,
