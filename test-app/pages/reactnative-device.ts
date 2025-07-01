@@ -1,18 +1,18 @@
  
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { EventEmitter } from "@video/events-typed";
-import { adapter, types } from "@video/video-client-core";
-import { types as typesMS } from "mediasoup-client";
-import { AppState, Platform } from "react-native";
+import { EventEmitter } from '@video/events-typed';
+import { adapter, types } from '@video/video-client-core';
+import { types as typesMS } from 'mediasoup-client';
+import { AppState, Platform } from 'react-native';
 import {
   mediaDevices,
   mediaDevices as WebRTCMediaDevices,
   MediaStream as WebRTCMediaStream,
   registerGlobals,
-} from "@videomobile/react-native-webrtc";
-import { ReactNativeBrowserAdapter } from ".";
-import pkg from "../package.json";
-import { rnLogger } from "./reactnative-log";
+} from '@videomobile/react-native-webrtc';
+import { ReactNativeBrowserAdapter } from '.';
+import pkg from '../package.json';
+import { rnLogger } from './reactnative-log';
 
 // use react-native-webrtc classes as global.
 registerGlobals();
@@ -65,7 +65,7 @@ class NetworkInfo implements types.NetworkInformation {
 
   downlinkMax: number;
 
-  effectiveType: "slow-2g" | "2g" | "3g" | "4g" | string;
+  effectiveType: 'slow-2g' | '2g' | '3g' | '4g' | string;
 
   rtt: number;
 
@@ -76,15 +76,15 @@ class NetworkInfo implements types.NetworkInformation {
   constructor() {
     this.downlink = 0;
     this.downlinkMax = 0;
-    this.effectiveType = "unknown";
+    this.effectiveType = 'unknown';
     this.rtt = 0;
     this.saveData = false;
-    this.type = "unknown";
+    this.type = 'unknown';
   }
 
-  addEventListener(_type: "change", _listener: (val: types.NetworkInformation) => void): void {}
+  addEventListener(_type: 'change', _listener: (val: types.NetworkInformation) => void): void {}
 
-  removeEventListener(_type: "change", _listener: (val: types.NetworkInformation) => void): void {}
+  removeEventListener(_type: 'change', _listener: (val: types.NetworkInformation) => void): void {}
 }
 
 export class ReactNativeDevice
@@ -158,18 +158,18 @@ export class ReactNativeDevice
     //       break;
     //   }
     // });
-    AppState.addEventListener("change", this._handleAppStateChange);
+    AppState.addEventListener('change', this._handleAppStateChange);
   }
 
   processRtpCapabilities(
-    direction: "send" | "recv",
+    direction: 'send' | 'recv',
     rtpCapabilities: typesMS.RtpCapabilities,
   ): typesMS.RtpCapabilities {
     // in the real world, some Android devices fail to encode H264, so let's filter it out
-    if (direction === "send" && Platform.OS === "android") {
+    if (direction === 'send' && Platform.OS === 'android') {
       return {
         ...rtpCapabilities,
-        codecs: rtpCapabilities.codecs?.filter((c) => c.mimeType !== "video/H264"),
+        codecs: rtpCapabilities.codecs?.filter((c) => c.mimeType !== 'video/H264'),
       };
     }
 
@@ -248,8 +248,8 @@ export class ReactNativeDevice
   }
 
   _handleAppStateChange = (nextAppState: string): void => {
-    this.appStateVisible = nextAppState === "active";
-    this.emit("visibilitychange");
+    this.appStateVisible = nextAppState === 'active';
+    this.emit('visibilitychange');
   };
 
   get appVersion(): string {
@@ -257,11 +257,11 @@ export class ReactNativeDevice
   }
 
   get isIosDevice(): boolean {
-    return Platform.OS === "ios";
+    return Platform.OS === 'ios';
   }
 
   get isAndroidDevice(): boolean {
-    return Platform.OS === "android";
+    return Platform.OS === 'android';
   }
 
   get isMobileDevice(): boolean {
@@ -317,8 +317,7 @@ export class ReactNativeDevice
   }
 
   get userAgent(): string {
-    // return UserAgent.getUserAgent();
-    return "Android";
+    return Platform.OS;
   }
 
   addEventListener(type: string, listener: (event: Event) => void): void {
@@ -330,7 +329,7 @@ export class ReactNativeDevice
   }
 
   createVideoElement(): types.VideoElement {
-    throw new Error("createVideoElement not implemented");
+    throw new Error('createVideoElement not implemented');
   }
 
   createVideoStub(): Promise<types.MediaStream> {
@@ -343,7 +342,7 @@ export class ReactNativeDevice
             minHeight: ReactNativeBrowserAdapter.INSTANCE.defaultSettingsVideo.minHeight,
             minFrameRate: ReactNativeBrowserAdapter.INSTANCE.defaultSettingsVideo.minFrameRate,
           },
-          facingMode: ReactNativeBrowserAdapter.INSTANCE.defaultSettingsVideo.frontCamera ? "user" : "environment",
+          facingMode: ReactNativeBrowserAdapter.INSTANCE.defaultSettingsVideo.frontCamera ? 'user' : 'environment',
         },
       }),
     );
@@ -351,7 +350,7 @@ export class ReactNativeDevice
 
   isCodecSupported(codec: string): boolean {
     rnLogger.log(`codec check: ${codec}`);
-    throw new Error("isCodecSupported not implemented");
+    throw new Error('isCodecSupported not implemented');
   }
 
   fetch(uri: string, request?: Partial<Request> | RequestInit): Promise<Response> {

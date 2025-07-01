@@ -35,15 +35,15 @@ function Broadcast(): React.JSX.Element {
 
   adapter.implement(new ReactNativeDevice());
 
-  const uID = 'icf-test';
+  const mainOpts = {userId: 'icf-msg-test-user', streamKey: 'mobile'};
   const vcOptions: types.VideoClientOptions = {
     backendEndpoints: [endpoint_demo],
     token: async () => {
-      return await getAuthTokenForDemo(endpoint_demo);
+      return await getAuthTokenForDemo(mainOpts);
     },
     displayName: "Test-App Demo (React Native)",
     loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
-    userId: uID,
+    userId: mainOpts.userId,
   };
 
   videoClient = new VideoClient(vcOptions);
@@ -88,7 +88,7 @@ function Broadcast(): React.JSX.Element {
 
     if (!call || call.state === 'closed') {
       call = await videoClient.createCall({
-        userId: uID,
+        userId: mainOpts.userId,
       });
     }
 

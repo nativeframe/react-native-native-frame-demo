@@ -30,18 +30,19 @@ function Watch(): React.JSX.Element {
 
   adapter.implement(new ReactNativeDevice());
 
+  const mainOpts = { userId: 'icf-msg-test-user', streamKey: 'mobile' };
   const vcOptions: types.VideoClientOptions = {
     backendEndpoints: [endpoint_demo],
     token: async () => {
-          return await getAuthTokenForDemo(endpoint_demo);
-        },
+      return await getAuthTokenForDemo(mainOpts);
+    },
     displayName: "Test-App Demo (React Native)",
     loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
-    userId: 'icf-watch',
+    userId: mainOpts.userId,
   };
 
   const videoClient = new VideoClient(vcOptions);
-  let player: PlayerAPI|undefined;
+  let player: PlayerAPI | undefined;
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   let mediaStream: MediaStream | null = null;
 
@@ -53,9 +54,9 @@ function Watch(): React.JSX.Element {
         players: ['webrtc', 'native-hls', 'hlsjs', 'flvhttp'],
         retryCall: true,
       };
-       player = videoClient.requestPlayer(opts.uri, playerOptions);
+      player = videoClient.requestPlayer(opts.uri, playerOptions);
       player.on("playerAccessDenied", () => {
-       rnLogger.error('access denied');
+        rnLogger.error('access denied');
       });
       player.on('driver', (d: string) => {
         console.log('new driver: ' + d);
@@ -81,14 +82,12 @@ function Watch(): React.JSX.Element {
             });
 
             const mediaStreamURL = (mediaStream as any).toURL();
-            console.log('00sdsmds: '+mediaStreamURL)
             setSource({ hls: '', webrtc: mediaStreamURL ?? '' });
           });
         });
       });
 
       (player as any).provider?.on('source', (manifest: ManifestJson) => {
-        console.log('manifest.formats: ' + JSON.stringify(manifest.formats));
         setSource({ hls: manifest.formats['mp4-hls']?.manifest ?? '', webrtc: '' });
         // const format = manifest.formats?.[this.state.format];
 
@@ -116,13 +115,13 @@ function Watch(): React.JSX.Element {
   };
 
   useEffect(() => {
-  
-      return () => {
-        player?.dispose('component unmount');
-        videoClient?.dispose('component unmount');
-      };
-    }, []);
-    
+
+    return () => {
+      player?.dispose('component unmount');
+      videoClient?.dispose('component unmount');
+    };
+  }, []);
+
   return (
     <SafeAreaView style={backgroundStyle}>
       <NFManifestPlayer style={styles.player} playerParams={source} />

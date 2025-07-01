@@ -42,7 +42,7 @@ if (globalThis?.navigator != null && globalThis.navigator.userAgent == null) {
   });
 }
 
-// const adapter = require("@video/video-client-core").adapter;
-// const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
+const adapter = require("@video/video-client-core").adapter;
+const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
 
-// adapter.implement(new ReactNativeDevice());
+adapter.implement(new ReactNativeDevice());

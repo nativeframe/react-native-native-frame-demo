@@ -1,27 +1,26 @@
 
 export const endpoint_demo = 'https://dev2.devspace.lsea4.livelyvideo.tv';
 
-export async function getAuthTokenForDemo(endpoint: string): Promise<string> {
-  const userId = 'icf-msg-bill';
+export async function getAuthTokenForDemo(opts: {userId: string, streamKey: string}): Promise<string> {
   const streamKey = 'stream1';
-  const resp = await fetch(`${endpoint}/apps/demos/api/demo/v1/access-token`, {
+  const resp = await fetch(`${endpoint_demo}/apps/demos/api/demo/v1/access-token`, {
     headers: {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
       scopes: ['broadcaster', 'private-broadcaster'],
-      userId,
+      userId: opts.userId,
       data: {
-        displayName: `User ${userId}`,
+        displayName: `User ${opts.userId}`,
         mirrors: [
           {
-            id: streamKey,
-            streamName: "default",
+            id: `${streamKey}-${opts.userId}`,
+            streamName: "mobile",
             kind: "rtmp",
             rtmpPath: `/origin_proxy/${streamKey}`,
-            clientEncoder: "demo",
-            streamKey,
-            clientReferrer: "demo",
+            clientEncoder: "mobile",
+            streamKey: streamKey,
+            clientReferrer: "demo"
           },
         ],
       },
