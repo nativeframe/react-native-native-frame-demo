@@ -15,7 +15,7 @@ import {
 
 import { NFBroadcaster, NFBroadcast } from '@nativeframe/react-native-native-frame';
 import { mediaController, types, VideoClient } from '@video/video-client-core';
-import { getAuthTokenForDemo } from '../util/AppUtil';
+import { endpoint_demo, getAuthTokenForDemo } from '../util/AppUtil';
 import { rnLogger } from './reactnative-log';
 
 function Broadcast(): React.JSX.Element {
@@ -35,13 +35,11 @@ function Broadcast(): React.JSX.Element {
 
   adapter.implement(new ReactNativeDevice());
 
-  const endpoint = 'https://dev2.devspace.lsea4.livelyvideo.tv';
-
   const uID = 'icf-test';
   const vcOptions: types.VideoClientOptions = {
-    backendEndpoints: [endpoint],
+    backendEndpoints: [endpoint_demo],
     token: async () => {
-      return await getAuthTokenForDemo(endpoint);
+      return await getAuthTokenForDemo(endpoint_demo);
     },
     displayName: "Test-App Demo (React Native)",
     loggerConfig: { clientName: "Test-App", writeLevel: "debug" },

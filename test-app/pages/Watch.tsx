@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Alert,
   DeviceEventEmitter,
@@ -16,10 +16,13 @@ import {
 
 import { VideoClient, types } from '@video/video-client-core';
 import { NFManifestPlayer } from '@nativeframe/react-native-native-frame';
-import { ManifestJson } from '@video/video-client-core/lib/api';
+import { CallAPI, ManifestJson, PlayerAPI } from '@video/video-client-core/lib/api';
+import { endpoint_demo, getAuthTokenForDemo } from '../util/AppUtil';
+import { MediaStream } from '@videomobile/react-native-webrtc';
+import { rnLogger } from './reactnative-log';
 
 function Watch(): React.JSX.Element {
-  const [source, setSource] = useState('');
+  const [source, setSource] = useState({ hls: '', webrtc: '' });
   const isDarkMode = useColorScheme() === 'dark';
 
   const adapter = require("@video/video-client-core").adapter;
@@ -28,16 +31,21 @@ function Watch(): React.JSX.Element {
   adapter.implement(new ReactNativeDevice());
 
   const vcOptions: types.VideoClientOptions = {
-    backendEndpoints: ['https://dev2.devspace.lsea4.livelyvideo.tv'],
+    backendEndpoints: [endpoint_demo],
+    token: async () => {
+          return await getAuthTokenForDemo(endpoint_demo);
+        },
     displayName: "Test-App Demo (React Native)",
     loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
-    userId: 'bones',
+    userId: 'icf-watch',
   };
 
   const videoClient = new VideoClient(vcOptions);
-
+  let player: PlayerAPI|undefined;
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
-  emitter.addListener("manifestPlayer.uri.onChanged", async (opts: {uri: string}) => {
+  let mediaStream: MediaStream | null = null;
+
+  emitter.addListener("manifestPlayer.uri.onChanged", async (opts: { uri: string }) => {
     try {
       const playerOptions: types.PlayerOptions = {
         autoPlay: true,
@@ -45,15 +53,43 @@ function Watch(): React.JSX.Element {
         players: ['webrtc', 'native-hls', 'hlsjs', 'flvhttp'],
         retryCall: true,
       };
-      const player = videoClient.requestPlayer(opts.uri, playerOptions);
+       player = videoClient.requestPlayer(opts.uri, playerOptions);
       player.on("playerAccessDenied", () => {
-        Alert.alert('Access Denied')
+       rnLogger.error('access denied');
       });
       player.on('driver', (d: string) => {
         console.log('new driver: ' + d);
       });
+      (player as any).on('joinedCall', ({ call }: { call: CallAPI }) => {
+        if (!call) return;
+
+        call.on('streamAdded', (event) => {
+          event.stream.on('source', (stream) => {
+            const tracks = stream.getTracks();
+            if (mediaStream) {
+              tracks.forEach((track) => {
+                mediaStream?.removeTrack(track as any);
+              });
+            }
+
+            mediaStream = new MediaStream();
+
+            tracks.forEach((track) => {
+              if (player?.localAudioMuted && track.kind === 'audio') { track.enabled = false; }
+              if (player?.localVideoPaused) { track.enabled = false; }
+              mediaStream?.addTrack(track as any);
+            });
+
+            const mediaStreamURL = (mediaStream as any).toURL();
+            console.log('00sdsmds: '+mediaStreamURL)
+            setSource({ hls: '', webrtc: mediaStreamURL ?? '' });
+          });
+        });
+      });
+
       (player as any).provider?.on('source', (manifest: ManifestJson) => {
-        setSource(manifest.formats['mp4-hls']?.manifest ?? '');
+        console.log('manifest.formats: ' + JSON.stringify(manifest.formats));
+        setSource({ hls: manifest.formats['mp4-hls']?.manifest ?? '', webrtc: '' });
         // const format = manifest.formats?.[this.state.format];
 
         // if (isGenericFormat(format) && format.manifest) {
@@ -79,9 +115,17 @@ function Watch(): React.JSX.Element {
     padding: 10,
   };
 
+  useEffect(() => {
+  
+      return () => {
+        player?.dispose('component unmount');
+        videoClient?.dispose('component unmount');
+      };
+    }, []);
+    
   return (
     <SafeAreaView style={backgroundStyle}>
-    <NFManifestPlayer style={styles.player} manifestUri={source} />
+      <NFManifestPlayer style={styles.player} playerParams={source} />
     </SafeAreaView>
   );
 }
