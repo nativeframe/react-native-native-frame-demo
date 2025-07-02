@@ -5,6 +5,9 @@ import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import Broadcast from './screens/Broadcast';
 import Cam2Cam from './screens/Cam2Cam';
+import { implementDevice } from './support';
+
+implementDevice();
 
 const MyTabs = createBottomTabNavigator({
   screens: {

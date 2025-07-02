@@ -1,12 +1,20 @@
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
+import ManifestPlayer from '../components/ManifestPlayer';
+import { useEffect, useState } from 'react';
+import ManifestPlayerVideo from '../components/ManifestPlayerVideo';
 
 export default function Player() {
-  const isDarkMode = useColorScheme() === 'dark';
+  const [manifestUrl, setManifestUrl] = useState('');
 
+  useEffect(() => {
+  })
   return (
     <View style={styles.container}>
-      <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <Text>Player</Text>
+      <Text style={styles.head}>Manifest url:</Text>
+      <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
+      <ManifestPlayer manifestUrl={manifestUrl} autoplay>
+        {({ manifestPlayer }) => <ManifestPlayerVideo manifestPlayer={manifestPlayer} />}
+      </ManifestPlayer>
     </View>
   );
 }
@@ -14,6 +22,17 @@ export default function Player() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center', justifyContent: 'center'
+    alignItems: 'center'
+  },
+  head: {
+    fontWeight: '600',
+    marginTop: 10
+  },
+  input: {
+    height: 40,
+    borderWidth: 1,
+    width: '80%',
+    padding: 10,
+    borderRadius: 3,
   },
 });

@@ -1,3 +1,6 @@
+import { adapter } from "@video/video-client-core";
+import { ReactNativeDevice } from "./reactnative-device";
+
 export class ReactNativeBrowserAdapter {
   static INSTANCE = new ReactNativeBrowserAdapter({
     platform: "ReactNative",
@@ -42,7 +45,6 @@ if (globalThis?.navigator != null && globalThis.navigator.userAgent == null) {
   });
 }
 
-const adapter = require("@video/video-client-core").adapter;
-const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
-
-adapter.implement(new ReactNativeDevice());
+export function implementDevice(){
+  adapter.implement(new ReactNativeDevice());
+}

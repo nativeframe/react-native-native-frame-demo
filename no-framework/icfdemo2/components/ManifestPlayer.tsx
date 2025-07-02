@@ -1,8 +1,8 @@
-import React, { Component, ReactNode } from 'react';
+import { Component, ReactNode } from 'react';
 import { ManifestPlayerEvents, ManifestPlayerRequestsListener } from '../native-events/ManifestPlayerEvents';
 import { VideoClient, types } from '@video/video-client-core';
 import { rnLogger } from '../support/reactnative-log';
-import { CallAPI, ManifestFormats, ManifestJson, isGenericFormat } from '@video/video-client-core/lib/api';
+import { CallAPI, ManifestJson, isGenericFormat } from '@video/video-client-core/lib/api';
 import { CorePlayer } from '@video/video-client-core/lib/internal/player/core';
 import { getAuthTokenForDemo, mainOpts } from '../util/AppUtil';
 
@@ -12,7 +12,6 @@ type NativePlayerSpecList = { id: NativeDrivers }[];
 
 interface ManifestPlayerProps {
   manifestUrl: string;
-  token: string;
   videoClientOptions?: types.VideoClientOptions;
   players?: NativeDrivers[];
   autoplay?: boolean;
@@ -40,8 +39,7 @@ const formatMappings: Record<string, NativeFormats> = {
 
 class ManifestPlayer
   extends Component<ManifestPlayerProps, ManifestPlayerState>
-  implements ManifestPlayerRequestsListener
-{
+  implements ManifestPlayerRequestsListener {
   readonly TAG = 'ManifestPlayer';
   readonly events = new ManifestPlayerEvents(this);
 
@@ -62,8 +60,8 @@ class ManifestPlayer
     const { videoClientOptions, players, autoplay, muted } = props;
     this.videoClient = new VideoClient({
       token: async () => {
-      return await getAuthTokenForDemo(mainOpts);
-    },
+        return await getAuthTokenForDemo(mainOpts);
+      },
       ...videoClientOptions,
     } as types.VideoClientOptions);
 
