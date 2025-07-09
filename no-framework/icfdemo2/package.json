@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "android": "react-native run-android",
+    "android-prepare": "yarn react-native bundle --platform android --dev false --reset-cache --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
@@ -19,9 +20,7 @@
     "@react-navigation/native": "^7.1.14",
     "@react-navigation/native-stack": "^7.3.21",
     "@video/video-client-core": "13.2.0",
-    "@video/video-client-react": "0.0.2-development83469de10ilya761.0",
     "@videomobile/react-native-webrtc": "^124.0.4",
-    "@videorn/video-client-reactnative": "9.0.0",
     "react": "19.0.0",
     "react-native": "0.78.0",
     "react-native-reanimated": "^3.18.0",

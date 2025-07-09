@@ -1,7 +1,5 @@
  
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { EventEmitter } from '@video/events-typed';
-import { adapter, types } from '@video/video-client-core';
 import { types as typesMS } from 'mediasoup-client';
 import { AppState, Platform } from 'react-native';
 import {
@@ -10,12 +8,14 @@ import {
   MediaStream as WebRTCMediaStream,
   registerGlobals,
 } from '@videomobile/react-native-webrtc';
-import { ReactNativeBrowserAdapter } from '.';
-import pkg from '../package.json';
-import { rnLogger } from './reactnative-log';
 
 // use react-native-webrtc classes as global.
 registerGlobals();
+
+import { adapter, types } from '@video/video-client-core';
+import { ReactNativeBrowserAdapter } from '.';
+import pkg from '../package.json';
+import { rnLogger } from './reactnative-log';
 
 // TODO allow DeviceScreenOrientation changed in ReactNativeDevice.
 class DeviceScreenOrientation implements types.ScreenOrientation {
@@ -76,10 +76,10 @@ class NetworkInfo implements types.NetworkInformation {
   constructor() {
     this.downlink = 0;
     this.downlinkMax = 0;
-    this.effectiveType = 'unknown';
+    this.effectiveType = '4g';
     this.rtt = 0;
     this.saveData = false;
-    this.type = 'unknown';
+    this.type = 'wifi';
   }
 
   addEventListener(_type: 'change', _listener: (val: types.NetworkInformation) => void): void {}
@@ -165,14 +165,6 @@ export class ReactNativeDevice
     direction: 'send' | 'recv',
     rtpCapabilities: typesMS.RtpCapabilities,
   ): typesMS.RtpCapabilities {
-    // in the real world, some Android devices fail to encode H264, so let's filter it out
-    if (direction === 'send' && Platform.OS === 'android') {
-      return {
-        ...rtpCapabilities,
-        codecs: rtpCapabilities.codecs?.filter((c) => c.mimeType !== 'video/H264'),
-      };
-    }
-
     return rtpCapabilities;
   }
 

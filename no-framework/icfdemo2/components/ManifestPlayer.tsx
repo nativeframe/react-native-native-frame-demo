@@ -4,7 +4,8 @@ import { VideoClient, types } from '@video/video-client-core';
 import { rnLogger } from '../support/reactnative-log';
 import { CallAPI, ManifestJson, isGenericFormat } from '@video/video-client-core/lib/api';
 import { CorePlayer } from '@video/video-client-core/lib/internal/player/core';
-import { getAuthTokenForDemo, mainOpts } from '../util/AppUtil';
+import { getAuthTokenForDemo } from '../util/AppUtil';
+import { uuidv4 } from '@video/video-client-core/lib/internal/utils';
 
 type NativeDrivers = 'webrtc' | 'native-hls';
 type NativeFormats = 'webrtc' | 'mp4-hls';
@@ -58,9 +59,11 @@ class ManifestPlayer
   constructor(props: ManifestPlayerProps) {
     super(props);
     const { videoClientOptions, players, autoplay, muted } = props;
+    const s = uuidv4();
+    
     this.videoClient = new VideoClient({
       token: async () => {
-        return await getAuthTokenForDemo(mainOpts);
+        return await getAuthTokenForDemo({displayName: 'ICF Msg User',userId: s, streamId: s, streamName: 'icf-msg-player'});
       },
       ...videoClientOptions,
     } as types.VideoClientOptions);

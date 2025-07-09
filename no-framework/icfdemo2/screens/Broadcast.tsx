@@ -1,9 +1,10 @@
 import { mediaController, types, VideoClient } from '@video/video-client-core';
-import { DeviceEventEmitter, NativeEventEmitter, NativeModules, Platform, StyleSheet, Button, View } from 'react-native';
+import { StyleSheet, Button, View } from 'react-native';
 import { endpoint_demo, getAuthTokenForDemo, getDefaultMediaStreamControllerOptions } from '../util/AppUtil';
 import { useEffect, useState } from 'react';
 import { rnLogger } from '../support/reactnative-log';
 import { RTCView } from '@videomobile/react-native-webrtc';
+import { uuidv4 } from '@video/video-client-core/lib/internal/utils';
 
 let videoClient: types.VideoClientAPI | undefined;
 let mc: types.MediaStreamControllerAPI | undefined;
@@ -11,7 +12,11 @@ let call: types.CallAPI | undefined;
 let broadcast: types.BroadcastAPI | undefined;
 
 export default function Broadcast() {
-  const mainOpts = { userId: 'icf-msg-test-user', streamKey: 'mobile', streamName: 'icf-msg', displayName: "Test-App Demo (React Native)" };
+  const s = uuidv4();
+  const mainOpts = {
+    displayName: "React-Native Demo",
+    userId: s, streamId: s, streamName: 'icf-msg'
+  };
   const [source, setSource] = useState<string | undefined>();
 
   useEffect(() => {
@@ -22,6 +27,7 @@ export default function Broadcast() {
       call?.close('component unmount');
       videoClient?.dispose('component unmount');
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
 
@@ -33,25 +39,10 @@ export default function Broadcast() {
       },
       displayName: mainOpts.displayName,
       loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
-      userId: mainOpts.userId,
+      userId: mainOpts.userId
     };
 
     videoClient = new VideoClient(vcOptions);
-    const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
-
-    emitter.addListener("broadcaster.camera.enable", async (opts: { enable: boolean }) => {
-      if (mc) {
-        mc.videoPaused = !opts.enable;
-      }
-    });
-    emitter.addListener("broadcaster.mic.enable", async (opts: { enable: boolean }) => {
-      if (mc) {
-        mc.audioMuted = !opts.enable;
-      }
-    });
-    emitter.addListener("broadcaster.onBroadcast.pause", async () => {
-      broadcast?.pause();
-    });
   }
 
   async function goBroadcast() {
@@ -66,7 +57,9 @@ export default function Broadcast() {
     if (!mc) {
       try {
         await mediaController.init();
-        mc = await mediaController.requestController(getDefaultMediaStreamControllerOptions());
+        const controllerOpts = getDefaultMediaStreamControllerOptions();
+        mc = await mediaController.requestController(controllerOpts);
+        rnLogger.log(`used media controller options`, controllerOpts);
       } catch (error) {
         rnLogger.error(error);
       }
