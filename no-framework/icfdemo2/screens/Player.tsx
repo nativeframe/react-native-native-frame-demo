@@ -1,7 +1,7 @@
-import { StyleSheet, Text, TextInput, useColorScheme, View } from 'react-native';
-import ManifestPlayer from '../components/ManifestPlayer';
+import { StyleSheet, Text, TextInput, View } from 'react-native';
+import ManifestPlayer from '../components/SampleManifestPlayer';
 import { useEffect, useState } from 'react';
-import ManifestPlayerVideo from '../components/ManifestPlayerVideo';
+import ManifestPlayerVideo from '../components/SampleManifestPlayerVideo';
 
 export default function Player() {
   const [manifestUrl, setManifestUrl] = useState('');

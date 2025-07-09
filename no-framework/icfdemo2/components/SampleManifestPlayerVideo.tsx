@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ManifestPlayer from "./ManifestPlayer";
+import ManifestPlayer from "./SampleManifestPlayer";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RTCView } from "@videomobile/react-native-webrtc";
@@ -16,12 +16,14 @@ export default function ManifestPlayerVideo({ manifestPlayer }: { manifestPlayer
       }, 1000);
       return () => clearInterval(interval);
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [manifestPlayer.state.format]);
 
   useEffect(() => {
     if (!manifestPlayer.props.autoplay) {
       videoRef.current?.setNativeProps({ paused: true });
     }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -56,36 +58,33 @@ export default function ManifestPlayerVideo({ manifestPlayer }: { manifestPlayer
           />
         </>
       )}
-      
+
       <View style={styles.btns}>
-        {manifestPlayer.state.paused ? (
-        <Button
+        <View style={styles.btn}><Button
           onPress={() => {
-            manifestPlayer.onRequestVideoPlay();
-            videoRef.current?.setNativeProps({ paused: false });
+            if (manifestPlayer.state.paused) {
+              manifestPlayer.onRequestVideoPlay();
+              videoRef.current?.setNativeProps({ paused: false });
+            } else {
+              manifestPlayer.onRequestVideoPause();
+              videoRef.current?.setNativeProps({ paused: true });
+            }
+
           }}
-          title="Play"
+          title={manifestPlayer.state.paused ? "Play" : "Pause"}
         />
-      ) : (
-        <Button
-          onPress={() => {
-            manifestPlayer.onRequestVideoPause();
-            videoRef.current?.setNativeProps({ paused: true });
-          }}
-          title="Pause"
-        />
-      )}
-      <View style={{height: 8} } />
-      <Button onPress={() => manifestPlayer.onRequestVideoMuteToggle()} title="Toggle Mute"/>
-    <View style={{height: 8} } />
-      <Button onPress={() => manifestPlayer.onRequestReloadPlayer()} title="Refresh Player" />
+        </View>
+
+        <View style={styles.btn}><Button onPress={() => manifestPlayer.onRequestVideoMuteToggle()} title="Mic" /></View>
+
+        <View style={styles.btn}><Button onPress={() => manifestPlayer.onRequestReloadPlayer()} title="Refresh" /></View>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-    label: {
+  label: {
     fontWeight: '600',
   },
   input: {
@@ -101,6 +100,7 @@ const styles = StyleSheet.create({
     width: 250,
     height: 200,
     marginBottom: 20,
+    alignSelf: 'center'
   },
   qualityPicker: {
     borderColor: 'black',
@@ -109,5 +109,12 @@ const styles = StyleSheet.create({
     width: 280,
   },
   btns: {
-  }
+    flexDirection: 'row'
+  },
+  btn: {
+    width: 80,
+    marginStart: 5,
+    marginRight: 5
+  },
+
 });

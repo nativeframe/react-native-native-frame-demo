@@ -1,4 +1,4 @@
-import { Button, StyleSheet, Text, useColorScheme, View } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import { rnLogger } from '../support/reactnative-log';
 
 export default function Home() {
