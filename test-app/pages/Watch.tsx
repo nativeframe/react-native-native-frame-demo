@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import {
-  Alert,
   DeviceEventEmitter,
   NativeEventEmitter,
   NativeModules,
@@ -20,24 +19,29 @@ import { CallAPI, ManifestJson, PlayerAPI } from '@video/video-client-core/lib/a
 import { endpoint_demo, getAuthTokenForDemo } from '../util/AppUtil';
 import { MediaStream } from '@videomobile/react-native-webrtc';
 import { rnLogger } from './reactnative-log';
+import { uuidv4 } from '@video/video-client-core/lib/internal/utils';
 
 function Watch(): React.JSX.Element {
   const [source, setSource] = useState({ hls: '', webrtc: '' });
   const isDarkMode = useColorScheme() === 'dark';
 
-  const adapter = require("@video/video-client-core").adapter;
-  const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
+  const adapter = require('@video/video-client-core').adapter;
+  const ReactNativeDevice = require('./reactnative-device').ReactNativeDevice;
 
   adapter.implement(new ReactNativeDevice());
 
-  const mainOpts = { userId: 'icf-msg-test-user', streamKey: 'mobile' };
+  const s = uuidv4();
+  const mainOpts = {
+    displayName: 'Test-App (React Native)',
+    userId: s, streamId: s, streamName: 'icf-msg',
+  };
   const vcOptions: types.VideoClientOptions = {
     backendEndpoints: [endpoint_demo],
     token: async () => {
       return await getAuthTokenForDemo(mainOpts);
     },
-    displayName: "Test-App Demo (React Native)",
-    loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
+    displayName: 'Test-App Demo (React Native)',
+    loggerConfig: { clientName: 'Test-App', writeLevel: 'debug' },
     userId: mainOpts.userId,
   };
 
@@ -46,7 +50,7 @@ function Watch(): React.JSX.Element {
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
   let mediaStream: MediaStream | null = null;
 
-  emitter.addListener("manifestPlayer.uri.onChanged", async (opts: { uri: string }) => {
+  emitter.addListener('manifestPlayer.uri.onChanged', async (opts: { uri: string }) => {
     try {
       const playerOptions: types.PlayerOptions = {
         autoPlay: true,
@@ -55,14 +59,14 @@ function Watch(): React.JSX.Element {
         retryCall: true,
       };
       player = videoClient.requestPlayer(opts.uri, playerOptions);
-      player.on("playerAccessDenied", () => {
+      player.on('playerAccessDenied', () => {
         rnLogger.error('access denied');
       });
       player.on('driver', (d: string) => {
         console.log('new driver: ' + d);
       });
       (player as any).on('joinedCall', ({ call }: { call: CallAPI }) => {
-        if (!call) return;
+        if (!call) { return; }
 
         call.on('streamAdded', (event) => {
           event.stream.on('source', (stream) => {
@@ -120,6 +124,7 @@ function Watch(): React.JSX.Element {
       player?.dispose('component unmount');
       videoClient?.dispose('component unmount');
     };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
