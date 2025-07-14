@@ -14,8 +14,8 @@ import { NFCam2Cam } from '@nativeframe/react-native-native-frame';
 function Cam2Cam(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
 
-  const adapter = require("@video/video-client-core").adapter;
-  const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
+  const adapter = require('@video/video-client-core').adapter;
+  const ReactNativeDevice = require('./reactnative-device').ReactNativeDevice;
 
   adapter.implement(new ReactNativeDevice());
 

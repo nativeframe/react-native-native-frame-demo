@@ -4,12 +4,13 @@
   "private": true,
   "scripts": {
     "android": "yarn && npx react-native run-android",
+    "android-prepare": "yarn react-native bundle --platform android --dev false --reset-cache --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "ios": "yarn && npx react-native run-ios",
     "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
-    "@nativeframe/react-native-native-frame": "0.9.169",
+    "@nativeframe/react-native-native-frame": "0.9.173",
     "@react-navigation/native": "^7.1.9",
     "@react-navigation/native-stack": "^7.3.13",
     "@videomobile/react-native-webrtc": "^124.0.4",

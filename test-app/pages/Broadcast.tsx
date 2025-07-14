@@ -17,6 +17,7 @@ import { NFBroadcaster, NFBroadcast } from '@nativeframe/react-native-native-fra
 import { mediaController, types, VideoClient } from '@video/video-client-core';
 import { endpoint_demo, getAuthTokenForDemo } from '../util/AppUtil';
 import { rnLogger } from './reactnative-log';
+import { uuidv4 } from '@video/video-client-core/lib/internal/utils';
 
 function Broadcast(): React.JSX.Element {
   const isDarkMode = useColorScheme() === 'dark';
@@ -30,40 +31,44 @@ function Broadcast(): React.JSX.Element {
   let mc: types.MediaStreamControllerAPI | undefined;
   let call: types.CallAPI;
   let broadcast: types.BroadcastAPI;
-  const adapter = require("@video/video-client-core").adapter;
-  const ReactNativeDevice = require("./reactnative-device").ReactNativeDevice;
+  const adapter = require('@video/video-client-core').adapter;
+  const ReactNativeDevice = require('./reactnative-device').ReactNativeDevice;
 
   adapter.implement(new ReactNativeDevice());
 
-  const mainOpts = {userId: 'icf-msg-test-user', streamKey: 'mobile'};
+  const s = uuidv4();
+  const mainOpts = {
+    displayName: 'Test-App (React Native)',
+    userId: s, streamId: s, streamName: 'icf-msg',
+  };
   const vcOptions: types.VideoClientOptions = {
     backendEndpoints: [endpoint_demo],
     token: async () => {
       return await getAuthTokenForDemo(mainOpts);
     },
-    displayName: "Test-App Demo (React Native)",
-    loggerConfig: { clientName: "Test-App", writeLevel: "debug" },
+    displayName: mainOpts.displayName,
+    loggerConfig: { clientName: 'Test-App', writeLevel: 'debug' },
     userId: mainOpts.userId,
   };
 
   videoClient = new VideoClient(vcOptions);
   const emitter = Platform.OS === 'android' ? DeviceEventEmitter : new NativeEventEmitter(NativeModules.ManifestPlayerEvents);
 
-  emitter.addListener("broadcaster.camera.enable", async (opts: { enable: boolean }) => {
+  emitter.addListener('broadcaster.camera.enable', async (opts: { enable: boolean }) => {
     if (mc) {
       mc.videoPaused = !opts.enable;
     }
   });
-  emitter.addListener("broadcaster.mic.enable", async (opts: { enable: boolean }) => {
+  emitter.addListener('broadcaster.mic.enable', async (opts: { enable: boolean }) => {
     if (mc) {
       mc.audioMuted = !opts.enable;
     }
   });
-  emitter.addListener("broadcaster.onBroadcast.pause", async () => {
+  emitter.addListener('broadcaster.onBroadcast.pause', async () => {
     broadcast?.pause();
   });
 
-  emitter.addListener("broadcaster.onBroadcast.start", async (opts: { uri: string }) => {
+  emitter.addListener('broadcaster.onBroadcast.start', async (opts: { uri: string }) => {
     if (broadcast && broadcast.state === 'active') {
       return;
     }
@@ -119,6 +124,7 @@ function Broadcast(): React.JSX.Element {
       call?.close('component unmount');
       videoClient?.dispose('component unmount');
     };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

@@ -73,3 +73,7 @@ yarn-error.log
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+
+/with-expo/icfdemo/.yarn/cache
+/no-framework/icfdemo/.yarn/cache
+/no-framework/icfdemo2/.yarn/cache
