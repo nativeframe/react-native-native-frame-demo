@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import ManifestPlayer from "./SampleManifestPlayer";
+import ManifestPlayer from "./NFManifestPlayer";
 import { Button, StyleSheet, Text, View } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { RTCView } from "@videomobile/react-native-webrtc";

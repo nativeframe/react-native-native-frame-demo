@@ -1,0 +1,1 @@
+- why must I copy and use yarnPath: .yarn/releases/yarn-3.6.1.cjs for things to work?

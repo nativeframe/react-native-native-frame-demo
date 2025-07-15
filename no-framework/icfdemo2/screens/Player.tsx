@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from 'react-native';
-import ManifestPlayer from '../components/SampleManifestPlayer';
 import { useEffect, useState } from 'react';
-import ManifestPlayerVideo from '../components/SampleManifestPlayerVideo';
+import NFManifestPlayer from '../components/NFManifestPlayer';
+import NFManifestPlayerVideo from '../components/NFManifestPlayerVideo';
 
 export default function Player() {
   const [manifestUrl, setManifestUrl] = useState('');
@@ -12,9 +12,9 @@ export default function Player() {
     <View style={styles.container}>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <ManifestPlayer manifestUrl={manifestUrl} autoplay>
-        {({ manifestPlayer }) => <ManifestPlayerVideo manifestPlayer={manifestPlayer} />}
-      </ManifestPlayer>
+      <NFManifestPlayer manifestUrl={manifestUrl} autoplay>
+        {({ manifestPlayer }) => <NFManifestPlayerVideo manifestPlayer={manifestPlayer} />}
+      </NFManifestPlayer>
     </View>
   );
 }

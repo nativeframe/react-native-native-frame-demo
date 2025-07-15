@@ -30,8 +30,7 @@ export default function Encoder() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-
-    function load() {
+    async function load() {
         const vcOptions: types.VideoClientOptions = {
             backendEndpoints: [endpoint_demo],
             token: async () => {
@@ -43,6 +42,45 @@ export default function Encoder() {
         };
 
         videoClient = new VideoClient(vcOptions);
+        
+        // Initialize camera preview immediately
+        await initializeCameraPreview();
+    }
+
+    async function initializeCameraPreview() {
+        if (!mc) {
+            try {
+                await mediaController.init();
+                const controllerOpts = getDefaultMediaStreamControllerOptions();
+                mc = await mediaController.requestController(controllerOpts);
+                rnLogger.log(`used media controller options`, controllerOpts);
+            } catch (error) {
+                rnLogger.error(error);
+                return;
+            }
+        }
+
+        if (!mc) {
+            rnLogger.error('could not initialize media controller');
+            return;
+        }
+
+        // Set up front camera
+        const [device] = mediaController.videoDevices().filter((d) => (d as any).facing === 'front');
+        if (device) {
+            mc.videoDeviceId = device.deviceId;
+        } else {
+            rnLogger.error('no front camera(s)');
+        }
+
+        // Set up the source stream for preview
+        mc.on('source', (stream) => {
+            setSource((stream as any).toURL())
+        });
+
+        // Start the camera preview (without broadcasting)
+        // This might vary depending on your video client API
+        // You may need to call something like mc.startPreview() or similar
     }
 
     async function goBroadcast() {
@@ -54,15 +92,9 @@ export default function Encoder() {
             return;
         }
 
+        // Ensure media controller is initialized
         if (!mc) {
-            try {
-                await mediaController.init();
-                const controllerOpts = getDefaultMediaStreamControllerOptions();
-                mc = await mediaController.requestController(controllerOpts);
-                rnLogger.log(`used media controller options`, controllerOpts);
-            } catch (error) {
-                rnLogger.error(error);
-            }
+            await initializeCameraPreview();
         }
 
         if (!mc) {
@@ -76,24 +108,11 @@ export default function Encoder() {
             });
         }
 
-        const [device] = mediaController.videoDevices().filter((d) => (d as any).facing === 'front');
-
-        if (device) {
-            mc.videoDeviceId = device.deviceId;
-        } else {
-            rnLogger.error('no front camera(s)');
-        }
-
-        mc.on('source', (stream) => {
-            setSource((stream as any).toURL())
-        });
-
         broadcast = await call?.broadcast(mc, { streamName: mainOpts.streamName });
 
         broadcast?.on('error', (e) => {
             rnLogger.error(e);
         });
-
     }
 
     return (
@@ -103,9 +122,7 @@ export default function Encoder() {
                 {source && <RTCView mirror style={styles.rtcFull} streamURL={source} />}
             </View>
             <View style={styles.btns}>
-
                 <View style={styles.btn}><Button onPress={() => mc?.toggleMic()} title="Mic" /></View>
-
                 <View style={styles.btn}><Button onPress={() => mc?.toggleCamera()} title="Cam" /></View>
             </View>
         </View>
@@ -138,5 +155,4 @@ const styles = StyleSheet.create({
         marginStart: 5,
         marginRight: 5
     },
-
 });
