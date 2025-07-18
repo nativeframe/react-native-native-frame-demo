@@ -5,6 +5,7 @@ import React from 'react';
 import { Image, StyleSheet } from 'react-native';
 import Broadcast from './screens/Broadcast';
 import Cam2Cam from './screens/Cam2Cam';
+import Settings from './screens/Settings';
 import { implementDevice } from './support';
 
 implementDevice();
@@ -14,6 +15,7 @@ const MyTabs = createBottomTabNavigator({
     Watch: Player,
     Broadcast: Broadcast,
     Cam2Cam: Cam2Cam,
+    Settings: Settings,
   },
    screenOptions: ({ route }) => ({
     tabBarIcon: ({ }) => {
@@ -23,6 +25,8 @@ const MyTabs = createBottomTabNavigator({
         icon = require('./assets/icon/stream.png');
       } else if (route.name === 'Cam2Cam') {
         icon = require('./assets/icon/camera.png');
+      }else if (route.name === 'Settings') {
+        icon = require('./assets/icon/settings.png');
       }
 
       return <Image  style={styles.tinyLogo} source={icon}/>;
