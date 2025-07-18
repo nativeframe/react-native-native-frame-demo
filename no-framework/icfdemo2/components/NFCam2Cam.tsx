@@ -39,10 +39,10 @@ export default function NFCam2Cam(opts:{session: NFSession}) {
         videoClient = new VideoClient(vcOptions);
         
         // Initialize camera preview immediately
-        await initializeCameraPreview();
+        await initCameraPreview();
     }
 
-    async function initializeCameraPreview() {
+    async function initCameraPreview() {
         if (!mc) {
             try {
                 await mediaController.init();
@@ -72,10 +72,6 @@ export default function NFCam2Cam(opts:{session: NFSession}) {
         mc.on('source', (stream) => {
             setSource((stream as any).toURL())
         });
-
-        // Start the camera preview (without broadcasting)
-        // This might vary depending on your video client API
-        // You may need to call something like mc.startPreview() or similar
     }
 
     async function goBroadcast() {
@@ -87,9 +83,8 @@ export default function NFCam2Cam(opts:{session: NFSession}) {
             return;
         }
 
-        // Ensure media controller is initialized
         if (!mc) {
-            await initializeCameraPreview();
+            await initCameraPreview();
         }
 
         if (!mc) {
