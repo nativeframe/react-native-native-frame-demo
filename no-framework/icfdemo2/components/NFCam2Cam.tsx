@@ -11,7 +11,7 @@ let mc: types.MediaStreamControllerAPI | undefined;
 let call: types.CallAPI | undefined;
 let broadcast: types.BroadcastAPI | undefined;
 
-export default function NFEncoder(opts:{session: NFSession}) {
+export default function NFCam2Cam(opts:{session: NFSession}) {
     const [source, setSource] = useState<string | undefined>();
 
     useEffect(() => {

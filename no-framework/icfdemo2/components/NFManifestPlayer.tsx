@@ -1,11 +1,11 @@
 import { Component, ReactNode } from 'react';
-import { ManifestPlayerEvents, ManifestPlayerRequestsListener } from '../native-events/ManifestPlayerEvents';
+import { NFManifestPlayerEvents, NFManifestPlayerRequestsListener } from '../native-events/NFManifestPlayerEvents';
 import { VideoClient, types } from '@video/video-client-core';
 import { rnLogger } from '../support/reactnative-log';
 import { CallAPI, ManifestJson, isGenericFormat } from '@video/video-client-core/lib/api';
 import { CorePlayer } from '@video/video-client-core/lib/internal/player/core';
-import { getAuthTokenForDemo } from '../util/AppUtil';
-import { uuidv4 } from '@video/video-client-core/lib/internal/utils';
+import { getAuthTokenForDemo } from '../util/NFAppUtil';
+import { NFSession } from '../util/NFSession';
 
 type NativeDrivers = 'webrtc' | 'native-hls';
 type NativeFormats = 'webrtc' | 'mp4-hls';
@@ -19,7 +19,8 @@ interface ManifestPlayerProps {
   muted?: boolean;
   preferredScoreLevel?: types.TranscodeScoreLevel | types.SourceScoreLevel;
   debounceInitTime?: number;
-  children?: (props: { manifestPlayer: ManifestPlayer }) => ReactNode | null;
+  session: NFSession;
+  children?: (props: { manifestPlayer: NFManifestPlayer }) => ReactNode | null;
 }
 
 interface ManifestPlayerState {
@@ -38,11 +39,11 @@ const formatMappings: Record<string, NativeFormats> = {
   'native-hls': 'mp4-hls',
 };
 
-class ManifestPlayer
+class NFManifestPlayer
   extends Component<ManifestPlayerProps, ManifestPlayerState>
-  implements ManifestPlayerRequestsListener {
-  readonly TAG = 'ManifestPlayer';
-  readonly events = new ManifestPlayerEvents(this);
+  implements NFManifestPlayerRequestsListener {
+  readonly TAG = 'NFManifestPlayer';
+  readonly events = new NFManifestPlayerEvents(this);
 
   videoClient: VideoClient;
 
@@ -59,11 +60,10 @@ class ManifestPlayer
   constructor(props: ManifestPlayerProps) {
     super(props);
     const { videoClientOptions, players, autoplay, muted } = props;
-    const s = uuidv4();
     
     this.videoClient = new VideoClient({
       token: async () => {
-        return await getAuthTokenForDemo({displayName: 'ICF Msg User',userId: s, streamId: s, streamName: 'icf-msg-player'});
+        return await getAuthTokenForDemo(props.session);
       },
       ...videoClientOptions,
     } as types.VideoClientOptions);
@@ -79,7 +79,7 @@ class ManifestPlayer
       driver: null,
       source: null,
       availableQualities: [],
-      paused: !(autoplay || videoClientOptions?.autoPlay || videoClientOptions?.playerOptions?.autoPlay) ?? false,
+      paused: !(autoplay || videoClientOptions?.autoPlay || videoClientOptions?.playerOptions?.autoPlay) ,
       muted: (muted || videoClientOptions?.playerOptions?.muted) ?? false,
     };
 
@@ -346,4 +346,4 @@ class ManifestPlayer
   }
 }
 
-export default ManifestPlayer;
+export default NFManifestPlayer;

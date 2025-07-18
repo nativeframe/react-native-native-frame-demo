@@ -1,7 +1,7 @@
 import { NativeModules , Platform, DeviceEventEmitter, NativeEventEmitter } from 'react-native';
 import EventEmitter from 'react-native/Libraries/vendor/emitter/EventEmitter';
 
-export interface ManifestPlayerRequestsListener {
+export interface NFManifestPlayerRequestsListener {
   onRequestVideoPause(): void;
   onRequestVideoPlay(): void;
   onRequestTimeupdate(): void;
@@ -12,10 +12,10 @@ export interface ManifestPlayerRequestsListener {
   onRequestVideoMuteToggle(): void;
 }
 
-export class ManifestPlayerEvents {
-  readonly requestsListener: ManifestPlayerRequestsListener;
+export class NFManifestPlayerEvents {
+  readonly requestsListener: NFManifestPlayerRequestsListener;
 
-  constructor(requestsListener: ManifestPlayerRequestsListener) {
+  constructor(requestsListener: NFManifestPlayerRequestsListener) {
     this.requestsListener = requestsListener;
   }
 

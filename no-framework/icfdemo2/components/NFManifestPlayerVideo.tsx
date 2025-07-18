@@ -5,7 +5,7 @@ import { Picker } from "@react-native-picker/picker";
 import { RTCView } from "@videomobile/react-native-webrtc";
 import Video from 'react-native-video';
 
-export default function ManifestPlayerVideo({ manifestPlayer }: { manifestPlayer: ManifestPlayer }) {
+export default function NFManifestPlayerVideo({ manifestPlayer }: { manifestPlayer: ManifestPlayer }) {
   const [preferredLevel, setPreferredLevel] = useState('');
   const videoRef = useRef<any>(null);
 
