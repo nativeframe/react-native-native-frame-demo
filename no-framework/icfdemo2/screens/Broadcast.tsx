@@ -5,7 +5,7 @@ import { getNFSession } from '../util/NFSession';
 export default function Broadcast() {
   return (
     <View style={styles.container}>
-      <NFEncoder session={getNFSession('React-Native Demo', 'react-native-icf-demo')}  />
+      <NFEncoder session={getNFSession('React-Native Demo', 'react-native-icf-demo')} />
     </View>
   );
 }

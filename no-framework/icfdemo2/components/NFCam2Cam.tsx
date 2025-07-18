@@ -1,5 +1,5 @@
 import { mediaController, types, VideoClient } from '@video/video-client-core';
-import { StyleSheet, Button, View } from 'react-native';
+import { StyleSheet, Button, View, Dimensions, Text } from 'react-native';
 import { endpoint_demo, getAuthTokenForDemo, getDefaultMediaStreamControllerOptions } from '../util/NFAppUtil';
 import { useEffect, useState } from 'react';
 import { rnLogger } from '../support/reactnative-log';
@@ -11,7 +11,7 @@ let mc: types.MediaStreamControllerAPI | undefined;
 let call: types.CallAPI | undefined;
 let broadcast: types.BroadcastAPI | undefined;
 
-export default function NFCam2Cam(opts:{session: NFSession}) {
+export default function NFCam2Cam(opts: { session: NFSession }) {
     const [source, setSource] = useState<string | undefined>();
 
     useEffect(() => {
@@ -37,8 +37,7 @@ export default function NFCam2Cam(opts:{session: NFSession}) {
         };
 
         videoClient = new VideoClient(vcOptions);
-        
-        // Initialize camera preview immediately
+
         await initCameraPreview();
     }
 
@@ -107,32 +106,46 @@ export default function NFCam2Cam(opts:{session: NFSession}) {
 
     return (
         <View style={styles.container}>
-            <Button onPress={() => goBroadcast()} title="Broadcast" />
-            <View style={styles.rtcview}>
-                {source && <RTCView mirror style={styles.rtcFull} streamURL={source} />}
-            </View>
+            <Button onPress={() => goBroadcast()} title="Connect" />
             <View style={styles.btns}>
                 <View style={styles.btn}><Button onPress={() => mc?.toggleMic()} title="Mic" /></View>
                 <View style={styles.btn}><Button onPress={() => mc?.toggleCamera()} title="Cam" /></View>
+            </View>
+            <View style={styles.otherview}>
+                <Text>Waiting...</Text>
+            </View>
+            <View style={styles.rtcview}>
+                {source && <RTCView mirror style={styles.rtc} streamURL={source} />}
             </View>
         </View>
     );
 }
 
+const { height: screenHeight, width: screenWidth } = Dimensions.get('window');
+const rtcHeight = 200
+const rtcWidth = 113
 const styles = StyleSheet.create({
     container: {
         alignItems: 'center',
         paddingTop: 20
     },
+    otherview: {
+        alignItems: 'center',
+        justifyContent: 'center',
+        height: '75%'
+    },
     rtcview: {
         marginTop: 5,
         justifyContent: 'center',
         alignItems: 'center',
-        height: 350,
-        width: '100%',
+        height: rtcHeight,
+        width: rtcWidth,
         backgroundColor: 'black',
+        position: 'absolute',
+        top: screenHeight - (rtcHeight * 2),
+        left: screenWidth - rtcWidth - 5
     },
-    rtcFull: {
+    rtc: {
         height: '100%',
         width: '100%',
     },
