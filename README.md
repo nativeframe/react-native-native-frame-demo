@@ -114,16 +114,19 @@ See:
 ```javascript
 import React from 'react';
 import { View } from 'react-native';
-import { ManifestPlayer, ManifestPlayerVideo, generateSession } from '@video/react-native-sdk';
+import { ManifestPlayer, ManifestPlayerVideo, getSession } from '@video/react-native-sdk';
 
 export default function App() {
-  const session = generateSession();
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
+    streamName: 'react-native-demo'
+  });
 
   return (
     <View style={{ flex: 1 }}>
       <ManifestPlayer 
         manifestUrl="<manifest URL>"
-        session={session}
+        session={mySession}
         autoplay
       >
         {({ manifestPlayer }) => (
@@ -144,14 +147,17 @@ export default function App() {
 ```javascript
 import React from 'react';
 import { View } from 'react-native';
-import { Encoder, generateSession } from '@video/react-native-sdk';
+import { Encoder, getSession } from '@video/react-native-sdk';
 
 export default function BroadcastApp() {
-  const session = generateSession();
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
+    streamName: 'react-native-demo'
+  });
 
   return (
     <View style={{ flex: 1 }}>
-      <Encoder session={session} />
+      <Encoder session={mySession} />
     </View>
   );
 }
@@ -211,15 +217,35 @@ Component for live video broadcasting with camera preview.
 
 #### Example
 ```javascript
-import { Encoder, generateSession } from '@video/react-native-sdk';
+import { Encoder, getSession } from '@video/react-native-sdk';
+const mySession = getSession({
+   backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
+   streamName: 'react-native-demo'
+});
 
-<Encoder session={generateSession()} />
+<Encoder session={mySession} />
 ```
 
 **Features:**
 - Live camera preview
 - One-tap broadcasting 
 - Front camera setup by default
+
+### Utilities
+
+#### getSession
+
+Creates and returns a session object for authentication with the video streaming service.
+
+**Parameters:**
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `backendEndpoint` | `string` | Yes | Your backend endpoint URL |
+| `displayName` | `string` | Yes | Display name for the session |
+| `streamName` | `string` | Yes | Unique stream identifier |
+
+**Returns:** `Session` object
 
 ## ⚠️ Important Notes
 

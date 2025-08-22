@@ -1,3 +1,4 @@
+import React from 'react';
 import { StyleSheet, Text, TextInput, View } from 'react-native';
 import { useState } from 'react';
 import { ManifestPlayer, ManifestPlayerVideo, getSession } from '@video/react-native-sdk';
@@ -5,11 +6,15 @@ import { ManifestPlayer, ManifestPlayerVideo, getSession } from '@video/react-na
 export default function PagePlayer() {
   const [manifestUrl, setManifestUrl] = useState('');
 
+  const mySession = getSession({
+    backendEndpoint: 'https://platform.nativeframe.com', displayName: 'React-Native Demo', streamName: 'react-native-demo',
+  });
+
   return (
     <View style={styles.container}>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <ManifestPlayer manifestUrl={manifestUrl} session={getSession('React-Native Demo', 'react-native-demo')} autoplay>
+      <ManifestPlayer manifestUrl={manifestUrl} session={mySession} autoplay>
         {({ manifestPlayer }) => <ManifestPlayerVideo manifestPlayer={manifestPlayer} fixedWidth={true} showButtons={true} showDriver={false} showQualitySelect={false} />}
       </ManifestPlayer>
     </View>
