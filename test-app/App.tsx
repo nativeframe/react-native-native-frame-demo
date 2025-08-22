@@ -1,39 +1,52 @@
+import { createStaticNavigation, ParamListBase, RouteProp } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { Image, LogBox, StyleSheet } from 'react-native';
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Encoder from './pages/PageEncoder';
+import Player from './pages/PagePlayer';
 
-const Stack = createNativeStackNavigator();
-import Home from './pages/Home';
-import Watch from './pages/Watch';
-import Broadcast from './pages/Broadcast';
-import { LogBox } from 'react-native';
-import Cam2Cam from './pages/Cam2Cam';
+LogBox.ignoreAllLogs();
 
-function App(): React.JSX.Element {
-  return (
-    <NavigationContainer>
-        <Stack.Navigator>
-          <Stack.Screen
-            name="ICF Messenger (React Native)"
-            component={Home}
-          />
-            <Stack.Screen
-            name="Watch"
-            component={Watch}
-          />
-           <Stack.Screen
-            name="Go Live"
-            component={Broadcast}
-          />
-           <Stack.Screen
-            name="Cam 2 Cam"
-            component={Cam2Cam}
-          />
-        </Stack.Navigator>
-      </NavigationContainer>
-  );
+const getTitle = (route: RouteProp<ParamListBase, string>) => {
+  return route.name
 }
 
-LogBox.ignoreAllLogs(true);
+const MyTabs = createBottomTabNavigator({
+  screens: {
+    Player: Player,
+    Broadcast: Encoder
+  },
+  screenOptions: ({ route }) => ({
+    tabBarLabel: getTitle(route),
+    tabBarIcon: ({ }) => {
+      let icon = require('./assets/icon/video.png');
 
-export default App;
+      if (route.name === 'Broadcast') {
+        icon = require('./assets/icon/stream.png');
+      }
+
+      return <Image style={styles.tinyLogo} source={icon} />;
+    },
+  }),
+});
+
+const Navigation = createStaticNavigation(MyTabs);
+
+export default function App() {
+  return <Navigation />;
+}
+
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+  },
+  tinyLogo: {
+    width: '70%',
+    height: '70%',
+  },
+  logo: {
+    width: 66,
+    height: 58,
+  },
+});
