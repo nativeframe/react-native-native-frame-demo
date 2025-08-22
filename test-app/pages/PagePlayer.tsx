@@ -9,7 +9,7 @@ export default function PagePlayer() {
     <View style={styles.container}>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <ManifestPlayer manifestUrl={manifestUrl} session={getSession('React-Native Demo', 'react-native-icf-demo')} autoplay>
+      <ManifestPlayer manifestUrl={manifestUrl} session={getSession('React-Native Demo', 'react-native-demo')} autoplay>
         {({ manifestPlayer }) => <ManifestPlayerVideo manifestPlayer={manifestPlayer} fixedWidth={true} showButtons={true} showDriver={false} showQualitySelect={false} />}
       </ManifestPlayer>
     </View>

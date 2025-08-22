@@ -1,4 +1,4 @@
-package com.testapp.icf
+package com.testapp.reactnative
 
 import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate

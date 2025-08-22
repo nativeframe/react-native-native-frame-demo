@@ -1,4 +1,4 @@
-package com.testapp.icf
+package com.testapp.reactnative
 
 import android.app.Application
 import com.facebook.react.PackageList

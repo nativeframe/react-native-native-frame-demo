@@ -77,14 +77,14 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.testapp.icf"
+    namespace "com.testapp.reactnative"
     defaultConfig {
-        applicationId "com.nativeframe.testapp.icf"
+        applicationId "com.nativeframe.testapp.reactnative"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
         versionName "0.8.2"
-        setProperty("archivesBaseName", "icf-msg-v$versionName")
+        setProperty("archivesBaseName", "reactnative-demo-v$versionName")
     }
     signingConfigs {
         debug {
