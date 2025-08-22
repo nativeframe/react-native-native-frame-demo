@@ -4,20 +4,28 @@
   "private": true,
   "scripts": {
     "android": "yarn && npx react-native run-android",
+    "android-clean": "cd android && ./gradlew clean && cd ..",
     "android-prepare": "yarn react-native bundle --platform android --dev false --reset-cache --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "ios": "yarn && npx react-native run-ios",
+    "react-native-clean": "npx react-native start --reset-cache",
     "lint": "eslint .",
     "test": "jest"
   },
   "dependencies": {
-    "@nativeframe/react-native-native-frame": "0.9.173",
-    "@react-navigation/native": "^7.1.9",
-    "@react-navigation/native-stack": "^7.3.13",
-    "@videomobile/react-native-webrtc": "^124.0.4",
-    "react": "18.3.1",
-    "react-native": "0.76.6",
-    "react-native-safe-area-context": "^5.4.1",
-    "react-native-screens": "^4.10.0"
+    "@react-native-async-storage/async-storage": "2.2.0",
+    "@react-native-community/netinfo": "11.4.1",
+    "@react-native-picker/picker": "2.11.1",
+    "@react-native/new-app-screen": "0.80.2",
+    "@react-navigation/bottom-tabs": "7.3.10",
+    "@react-navigation/native": "7.1.14",
+    "@react-navigation/native-stack": "7.3.21",
+    "@video/react-native-sdk": "0.9.0",
+    "react": "19.0.0",
+    "react-native": "0.78.0",
+    "react-native-safe-area-context": "5.5.1",
+    "react-native-screens": "4.11.1",
+    "react-native-video": "6.16.1",
+    "react-native-webrtc": "124.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
@@ -41,5 +49,6 @@
   },
   "engines": {
     "node": ">=18"
-  }
+  },
+  "packageManager": "yarn@3.6.4+sha512.e70835d4d6d62c07be76b3c1529cb640c7443f0fe434ef4b6478a5a399218cbaf1511b396b3c56eb03bc86424cff2320f6167ad2fde273aa0df6e60b7754029f"
 }

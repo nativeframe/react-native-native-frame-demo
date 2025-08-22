@@ -1,5 +1,0 @@
-- add dep @nativeframe/react-native-native-frame
-- add packages to PackageList in (Main)Application: addAll(com.nativeframe.NativeFramePackages.packages).
-- use component like NFVideoPlayer
-
-yarn or npm
