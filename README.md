@@ -87,6 +87,36 @@ cd ios && pod install
 
 ---
 
+## 🔧 NPM Scope Configuration
+
+**Important:** Before installing the SDK, developers must configure their npm scope to access the `@video` packages from our registry.
+
+### Configure NPM Registry
+
+Add the following configuration to your project:
+
+#### For yarn users
+Create or update `.yarnrc.yml` in your project root:
+```yaml
+npmScopes:
+  video:
+    npmRegistryServer: https://npm-packages.nativeframe.com/
+```
+
+#### For npm users  
+Run the following command or add to `.npmrc`:
+```bash
+npm config set @video:registry https://npm-packages.nativeframe.com/
+```
+
+#### For pnpm users
+Add to `.npmrc` in your project root:
+```
+@video:registry=https://npm-packages.nativeframe.com/
+```
+
+---
+
 ## ⚡ One-Line Installation
 
 #### yarn
