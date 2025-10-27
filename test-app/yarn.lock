@@ -3164,9 +3164,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@video/react-native-sdk@npm:0.9.0":
-  version: 0.9.0
-  resolution: "@video/react-native-sdk@npm:0.9.0"
+"@video/react-native-sdk@npm:0.11.0":
+  version: 0.11.0
+  resolution: "@video/react-native-sdk@npm:0.11.0"
   dependencies:
     "@react-native-async-storage/async-storage": 2.2.0
     "@react-native-community/netinfo": 11.4.1
@@ -3183,7 +3183,7 @@ __metadata:
     react-native-screens: 4.11.1
     react-native-video: 6.16.1
     react-native-webrtc: 124.0.0
-  checksum: 2e95a05f1b0a34d7aba274442a990462fb610f76d530e6bacd16aed74c0cf2f3a840e374183649c54df9ba77462d290bcfb57e2c3ad03bac59ec1d5ef0a4197c
+  checksum: 40769baf2175d49a5407be60e6253228d786f4ccdb313e5c916d98304e4d350c20ae88360c15bc2d77db72529bae62462a77882b845d6f466467f0b49a732f7c
   languageName: node
   linkType: hard
 
@@ -9947,7 +9947,7 @@ __metadata:
     "@react-navigation/native-stack": 7.3.21
     "@types/react": ^18.2.6
     "@types/react-test-renderer": ^18.0.0
-    "@video/react-native-sdk": 0.9.0
+    "@video/react-native-sdk": 0.11.0
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     jest: ^29.6.3

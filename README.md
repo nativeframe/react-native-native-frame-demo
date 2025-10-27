@@ -144,7 +144,7 @@ See:
 ```javascript
 import React from 'react';
 import { View } from 'react-native';
-import { ManifestPlayer, ManifestPlayerVideo, getSession } from '@video/react-native-sdk';
+import { ManifestPlayer, ManifestPlayerVideo, ManifestPlayerVideoCustomControls, getSession } from '@video/react-native-sdk';
 
 export default function App() {
   const mySession = getSession({
@@ -162,9 +162,10 @@ export default function App() {
         {({ manifestPlayer }) => (
           <ManifestPlayerVideo
             manifestPlayer={manifestPlayer}
-            showButtons={true}
+            showControls={true}
             showDriver={false}
             showQualitySelect={false}
+            style={{ backgroundColor: '#000' }}
           />
         )}
       </ManifestPlayer>
@@ -205,7 +206,8 @@ The main component for video stream playing.
 |------|------|---------|-------------|
 | `manifestUrl` | `string` | - | Manifest URL for streaming |
 | `session` | `Session` | - | **Required** - User session for authentication |
-| `muted` | `boolean` | Start with audio muted |
+| `autoplay` | `boolean` | `false` | Start playback automatically when ready |
+| `muted` | `boolean` | `false` | Start with audio muted |
 
 #### Example
 ```javascript
@@ -230,10 +232,53 @@ Video player UI component with controls.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `manifestPlayer` | `ManifestPlayer` | - | **Required** - Player instance |
-| `showButtons` | `boolean` | `false` | Show play/pause/refresh controls |
+| `style` | `ViewStyle` | - | Style object |
+| `showControls` | `boolean` | `false` | Show play/pause/refresh controls (webrtc only) |
 | `showDriver` | `boolean` | `false` | Show current driver info |
 | `showQualitySelect` | `boolean` | `false` | Show quality selection dropdown |
 | `fixedWidth` | `boolean` | `false` | Use fixed width layout |
+
+### ManifestPlayerVideoCustomControls
+
+Video player component that allows custom overlay UI elements.
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `manifestPlayer` | `ManifestPlayer` | - | **Required** - Player instance |
+| `style` | `ViewStyle` | - | Style object |
+| `key` | `string` | - | React key prop |
+| `children` | `ReactNode` | - | Custom UI elements to overlay on the video |
+| `progressUpdateInterval` | `number` | - | Progress updates interval |
+| `resizeMode` | `string` | - | Video resize mode |
+| `preventsDisplaySleepDuringVideoPlayback` | `boolean` | `true` | Prevents device screen sleeping |
+| `allowsExternalPlayback` | `boolean` | `true` | Enabled external device playback |
+| `paused` | `boolean` | `false` | Video playback state |
+| `muted` | `boolean` | `false` | Audio muting |
+| `rate` | `number` | `1.0` | Playback speed |
+| `onProgress` | `function` | - | Callback for playback progress |
+| `onLoad` | `function` | - | Callback for video load |
+| `onEnd` | `function` | - | Callback for video end |
+| `onError` | `function` | - | Callback for video error |
+| `onFullscreenPlayerDidDismiss` | `function` | - | Callback for fullscreen player |
+| `onPlaybackStateChanged` | `function` | - | Callback for playback |
+
+#### Example
+```javascript
+<ManifestPlayerVideoCustomControls 
+  style={{ backgroundColor: '#000000' }}
+  manifestPlayer={manifestPlayer}
+  onLoad={() => console.log('loaded')}
+>
+  {/* custom UI */}
+  <View style={{ position: 'absolute', top: 10, right: 10, backgroundColor: '#F01B1B' }}>
+    <Text style={{ color: 'white' }}>Custom Overlay</Text>
+  </View>
+</ManifestPlayerVideoCustomControls>
+```
+
+<img src="img/screenshot-3.png" alt="Custom UI Screenshot" width="300"/>
 
 ### Encoder
 
