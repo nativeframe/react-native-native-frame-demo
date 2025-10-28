@@ -41,13 +41,13 @@ React Native SDK for video streaming.
 yarn add @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-yarn add react-native-video@^6.16.1 \
-         react-native-webrtc@^124.0.0 \
-         @react-native-picker/picker@^2.11.1 \
-         @react-native-async-storage/async-storage@^2.2.0 \
-         @react-native-community/netinfo@^11.4.1 \
-         react-native-safe-area-context@^5.5.1 \
-         react-native-screens@^4.11.1
+yarn add react-native-video@6.16.1 \
+         react-native-webrtc@124.0.6 \
+         @react-native-picker/picker@2.11.1 \
+         @react-native-async-storage/async-storage@2.2.0 \
+         @react-native-community/netinfo@11.4.1 \
+         react-native-safe-area-context@5.5.1 \
+         react-native-screens@4.16.0
 ```
 
 #### npm
@@ -56,13 +56,13 @@ yarn add react-native-video@^6.16.1 \
 npm install @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-npm install react-native-video@^6.16.1 \
-           react-native-webrtc@^124.0.0 \
-           @react-native-picker/picker@^2.11.1 \
-           @react-native-async-storage/async-storage@^2.2.0 \
-           @react-native-community/netinfo@^11.4.1 \
-           react-native-safe-area-context@^5.5.1 \
-           react-native-screens@^4.11.1
+npm install react-native-video@6.16.1 \
+           react-native-webrtc@124.0.6 \
+           @react-native-picker/picker@2.11.1 \
+           @react-native-async-storage/async-storage@2.2.0 \
+           @react-native-community/netinfo@11.4.1 \
+           react-native-safe-area-context@5.5.1 \
+           react-native-screens@4.16.0
 ```
 
 #### pnpm
@@ -71,13 +71,13 @@ npm install react-native-video@^6.16.1 \
 pnpm add @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-pnpm add react-native-video@^6.16.1 \
-         react-native-webrtc@^124.0.0 \
-         @react-native-picker/picker@^2.11.1 \
-         @react-native-async-storage/async-storage@^2.2.0 \
-         @react-native-community/netinfo@^11.4.1 \
-         react-native-safe-area-context@^5.5.1 \
-         react-native-screens@^4.11.1
+pnpm add react-native-video@6.16.1 \
+         react-native-webrtc@124.0.6 \
+         @react-native-picker/picker@2.11.1 \
+         @react-native-async-storage/async-storage@2.2.0 \
+         @react-native-community/netinfo@11.4.1 \
+         react-native-safe-area-context@5.5.1 \
+         react-native-screens@4.16.0
 ```
 
 ### 🍎 iOS Additional Setup
@@ -121,17 +121,17 @@ Add to `.npmrc` in your project root:
 
 #### yarn
 ```bash  
-yarn add @video/react-native-sdk react-native-video@^6.16.1 react-native-webrtc@^124.0.0 @react-native-picker/picker@^2.11.1 @react-native-async-storage/async-storage@^2.2.0 @react-native-community/netinfo@^11.4.1 react-native-safe-area-context@^5.5.1 react-native-screens@^4.11.1
+yarn add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### npm (7+)
 ```bash
-npm install @video/react-native-sdk react-native-video@^6.16.1 react-native-webrtc@^124.0.0 @react-native-picker/picker@^2.11.1 @react-native-async-storage/async-storage@^2.2.0 @react-native-community/netinfo@^11.4.1 react-native-safe-area-context@^5.5.1 react-native-screens@^4.11.1
+npm install @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### pnpm
 ```bash
-pnpm add @video/react-native-sdk react-native-video@^6.16.1 react-native-webrtc@^124.0.0 @react-native-picker/picker@^2.11.1 @react-native-async-storage/async-storage@^2.2.0 @react-native-community/netinfo@^11.4.1 react-native-safe-area-context@^5.5.1 react-native-screens@^4.11.1
+pnpm add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 ## Quick Start
