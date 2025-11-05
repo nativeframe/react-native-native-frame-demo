@@ -132,6 +132,7 @@ pnpm add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@1
 
 See:
 - [test-app/PagePlayer.tsx](test-app/PagePlayer.tsx)
+- [test-app/PageSimplePlayer.tsx](test-app/PageSimplePlayer.tsx)
 - [test-app/PageEncoder.tsx](test-app/PageEncoder.tsx)
 
 ### Sample code
