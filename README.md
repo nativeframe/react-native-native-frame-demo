@@ -44,8 +44,6 @@ yarn add @video/react-native-sdk
 yarn add react-native-video@6.16.1 \
          react-native-webrtc@124.0.6 \
          @react-native-picker/picker@2.11.1 \
-         @react-native-async-storage/async-storage@2.2.0 \
-         @react-native-community/netinfo@11.4.1 \
          react-native-safe-area-context@5.5.1 \
          react-native-screens@4.16.0
 ```
@@ -59,8 +57,6 @@ npm install @video/react-native-sdk
 npm install react-native-video@6.16.1 \
            react-native-webrtc@124.0.6 \
            @react-native-picker/picker@2.11.1 \
-           @react-native-async-storage/async-storage@2.2.0 \
-           @react-native-community/netinfo@11.4.1 \
            react-native-safe-area-context@5.5.1 \
            react-native-screens@4.16.0
 ```
@@ -74,8 +70,6 @@ pnpm add @video/react-native-sdk
 pnpm add react-native-video@6.16.1 \
          react-native-webrtc@124.0.6 \
          @react-native-picker/picker@2.11.1 \
-         @react-native-async-storage/async-storage@2.2.0 \
-         @react-native-community/netinfo@11.4.1 \
          react-native-safe-area-context@5.5.1 \
          react-native-screens@4.16.0
 ```
@@ -121,17 +115,17 @@ Add to `.npmrc` in your project root:
 
 #### yarn
 ```bash  
-yarn add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+yarn add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### npm (7+)
 ```bash
-npm install @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+npm install @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### pnpm
 ```bash
-pnpm add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 @react-native-async-storage/async-storage@2.2.0 @react-native-community/netinfo@11.4.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+pnpm add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 ## Quick Start
@@ -144,7 +138,7 @@ See:
 ```javascript
 import React from 'react';
 import { View } from 'react-native';
-import { ManifestPlayer, ManifestPlayerVideo, ManifestPlayerVideoCustomControls, getSession } from '@video/react-native-sdk';
+import { ManifestPlayer, ManifestPlayerVideo, ManifestPlayerVideoCustomControls, VideoPlayer, getSession } from '@video/react-native-sdk';
 
 export default function App() {
   const mySession = getSession({
@@ -195,6 +189,76 @@ export default function BroadcastApp() {
 ```
 
 ## API Reference
+
+---
+
+## NEW: VideoPlayer Component
+
+**IMPORTANT: HLS-Only Video Player** 
+
+The `VideoPlayer` component is a simplified video player that **only supports HLS streaming** (no WebRTC). It automatically falls back to HLS when WebRTC is not available, making it ideal for scenarios where you need reliable HLS-only playback.
+
+### Key Features
+- HLS-only streaming (WebRTC support removed)
+
+### VideoPlayer Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `manifestUrl` | `string` | - | **Required** - Manifest URL for streaming |
+| `session` | `Session` | - | **Required** - User session for authentication |
+| `autoplay` | `boolean` | `false` | Start playback automatically when ready |
+| `muted` | `boolean` | `false` | Start with audio muted |
+| `preferredScoreLevel` | `TranscodeScoreLevel \| SourceScoreLevel` | - | Preferred quality level |
+| `debounceInitTime` | `number` | `500` | Debounce time for initialization in milliseconds |
+| `style` | `ViewStyle` | - | Style object for the video container |
+| `progressUpdateInterval` | `number` | - | Progress updates interval in milliseconds |
+| `resizeMode` | `ResizeMode` | - | Video resize mode ('contain', 'cover', 'stretch') |
+| `preventsDisplaySleepDuringVideoPlayback` | `boolean` | `true` | Prevents device screen sleeping during playback |
+| `allowsExternalPlayback` | `boolean` | `true` | Allows video to be played on external devices |
+| `paused` | `boolean` | `false` | Controls video playback state |
+| `rate` | `number` | `1.0` | Playback speed rate |
+| `onProgress` | `function` | - | Callback for playback progress updates |
+| `onLoad` | `function` | - | Callback function called when video loads |
+| `onEnd` | `function` | - | Callback function called when video ends |
+| `onError` | `function` | - | Callback function called on video error |
+| `onFullscreenPlayerDidDismiss` | `function` | - | Callback when fullscreen player is dismissed |
+| `onPlaybackStateChanged` | `function` | - | Callback when playback state changes |
+
+### VideoPlayer Example
+
+```javascript
+import React from 'react';
+import { View } from 'react-native';
+import { VideoPlayer, getSession } from '@video/react-native-sdk';
+
+export default function HLSPlayerApp() {
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>', 
+    displayName: 'React-Native Demo', 
+    streamName: 'react-native-demo'
+  });
+
+  return (
+    <View style={{ flex: 1 }}>
+      <VideoPlayer 
+        manifestUrl="<manifest URL>"
+        session={mySession}
+        autoplay={true}
+        style={{ width: '100%', height: 200 }}
+        onLoad={() => console.log('Video loaded')}
+        onError={(error) => console.error('Video error:', error)}
+      />
+    </View>
+  );
+}
+```
+
+**When to use VideoPlayer vs ManifestPlayer:**
+- **Use VideoPlayer** for HLS-only streaming with better performance
+- **Use ManifestPlayer** for WebRTC + HLS support with automatic fallback
+
+---
 
 ### ManifestPlayer
 
