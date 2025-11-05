@@ -4,6 +4,7 @@ import { Image, LogBox, StyleSheet } from 'react-native';
 import React from 'react';
 import Encoder from './pages/PageEncoder';
 import Player from './pages/PagePlayer';
+import PageSimplePlayer from './pages/PageSimplePlayer';
 
 LogBox.ignoreAllLogs();
 
@@ -13,6 +14,7 @@ const getTitle = (route: RouteProp<ParamListBase, string>) => {
 
 const MyTabs = createBottomTabNavigator({
   screens: {
+    SimplePlayer: PageSimplePlayer,
     Player: Player,
     Broadcast: Encoder
   },
