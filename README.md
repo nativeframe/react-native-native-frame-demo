@@ -225,24 +225,45 @@ The `VideoPlayer` component is a simplified video player that **only supports HL
 | `onError` | `function` | - | Callback function called on video error |
 | `onFullscreenPlayerDidDismiss` | `function` | - | Callback when fullscreen player is dismissed |
 | `onPlaybackStateChanged` | `function` | - | Callback when playback state changes |
+| `ref` | `RefObject<any> \| RefObject<VideoPlayerMethods>` | - | - Ref object for accessing VideoPlayer methods |
+
+### VideoPlayer Ref Methods
+
+The `VideoPlayer` component exposes the following methods through ref:
+
+```typescript
+rewind(seconds: number): void;
+goLive(): void;
+```
 
 ### VideoPlayer Example
 
 ```javascript
-import React from 'react';
-import { View } from 'react-native';
+import React, { useRef } from 'react';
+import { View, Button } from 'react-native';
 import { VideoPlayer, getSession } from '@video/react-native-sdk';
 
 export default function HLSPlayerApp() {
+  //you can also pass <any> or extend VideoPlayerMethods to get strict typing
+  const videoRef = useRef<VideoPlayerMethods>(null);
   const mySession = getSession({
     backendEndpoint: '<your backend endpoint>', 
     displayName: 'React-Native Demo', 
     streamName: 'react-native-demo'
   });
 
+  const handleRewind = () => {
+    videoRef.current?.rewind(10); // Rewind 10 seconds
+  };
+
+  const handleGoLive = () => {
+    videoRef.current?.goLive();
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <VideoPlayer 
+        ref={videoRef}
         manifestUrl="<manifest URL>"
         session={mySession}
         autoplay={true}
@@ -250,6 +271,10 @@ export default function HLSPlayerApp() {
         onLoad={() => console.log('Video loaded')}
         onError={(error) => console.error('Video error:', error)}
       />
+      <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
+        <Button title="Rewind 10s" onPress={handleRewind} />
+        <Button title="Go Live" onPress={handleGoLive} />
+      </View>
     </View>
   );
 }
