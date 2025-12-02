@@ -7,7 +7,8 @@ import {
 
 export default function PageSimplePlayer() {
   const [manifestUrl, setManifestUrl] = useState('');
-
+  //optional
+  //const videoRef = useRef<any>(null);
   const mySession = getSession({
     backendEndpoint: 'https://platform.nativeframe.com', displayName: 'React-Native Demo', streamName: 'react-native-demo',
   });
@@ -24,7 +25,7 @@ export default function PageSimplePlayer() {
       <Text>Player (no WebRTC)</Text>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} />
+      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} /* ref={videoRef} */ />
     </ScrollView>
   );
 }
