@@ -2939,12 +2939,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@video/react-native-sdk@npm:0.15.0-beta":
-  version: 0.15.0-beta
-  resolution: "@video/react-native-sdk@npm:0.15.0-beta"
+"@video/react-native-sdk@npm:0.15.1-beta":
+  version: 0.15.1-beta
+  resolution: "@video/react-native-sdk@npm:0.15.1-beta"
   dependencies:
     "@video/video-client-core": 13.2.0
-  checksum: b14784d64cfda7025700753a1c86e0e0693767dd8a6eb3a5a0fa9f6e800233cbef82fa2b7aaa97027743b8b0b62807ff463a21d1607fdb3fa033958629eed54c
+  checksum: aa19befe73fe53fd6ec13f37e76479563d18a29143a9ec04139619c00ec24b386cdd220ecd19bb5ec65dbdb8aa63ec8c763afd82b933722581454c61bc0b7a34
   languageName: node
   linkType: hard
 
@@ -9308,7 +9308,7 @@ __metadata:
     "@react-navigation/native": 7.1.14
     "@react-navigation/native-stack": 7.3.21
     "@types/react": ^18.2.6
-    "@video/react-native-sdk": 0.15.0-beta
+    "@video/react-native-sdk": 0.15.1-beta
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     jest: ^29.6.3
