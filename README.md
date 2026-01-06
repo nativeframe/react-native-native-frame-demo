@@ -135,11 +135,11 @@ See:
 - [test-app/PageSimplePlayer.tsx](test-app/PageSimplePlayer.tsx)
 - [test-app/PageEncoder.tsx](test-app/PageEncoder.tsx)
 
-### Sample code
+### Player Example
 ```javascript
 import React from 'react';
 import { View } from 'react-native';
-import { ManifestPlayer, ManifestPlayerVideo, ManifestPlayerVideoCustomControls, VideoPlayer, getSession } from '@video/react-native-sdk';
+import { VideoPlayer, getSession } from '@video/react-native-sdk';
 
 export default function App() {
   const mySession = getSession({
@@ -149,21 +149,7 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ManifestPlayer 
-        manifestUrl="<manifest URL>"
-        session={mySession}
-        autoplay
-      >
-        {({ manifestPlayer }) => (
-          <ManifestPlayerVideo
-            manifestPlayer={manifestPlayer}
-            showControls={true}
-            showDriver={false}
-            showQualitySelect={false}
-            style={{ backgroundColor: '#000' }}
-          />
-        )}
-      </ManifestPlayer>
+       <VideoPlayer style={{ backgroundColor: '#000' }} manifestUrl="<manifest URL>" session={mySession} />
     </View>
   );
 }
