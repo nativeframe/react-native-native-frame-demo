@@ -149,7 +149,8 @@ export default function App() {
 
   return (
     <View style={{ flex: 1 }}>
-       <VideoPlayer style={{ backgroundColor: '#000' }} manifestUrl="<manifest URL>" session={mySession} />
+       <VideoPlayer manifestUrl="<manifest URL>" 
+          style={{ backgroundColor: '#000' }} session={mySession} />
     </View>
   );
 }
