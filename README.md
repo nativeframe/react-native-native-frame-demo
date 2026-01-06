@@ -28,14 +28,14 @@ React Native SDK for video streaming.
 
 ## Features
 
-- 📹 **Live video streaming** with WebRTC and HLS support
-- 📡 **Live broadcasting** with camera preview and optional controls
-- 📱 **Cross-platform** - iOS and Android support
-- 🔄 **Automatic fallback** between WebRTC and HLS
+- **Live video streaming** with WebRTC and HLS support
+- **Live broadcasting** with camera preview and optional controls
+- **Cross-platform** - iOS and Android support
+- **Automatic fallback** between WebRTC and HLS
 
 ## Installation
 
-### 📦 Install SDK and Dependencies
+### Install SDK and Dependencies
 
 #### yarn  
 ```bash
@@ -76,7 +76,7 @@ pnpm add react-native-video@6.16.1 \
          react-native-screens@4.16.0
 ```
 
-### 🍎 iOS Additional Setup
+### iOS Additional Setup
 ```bash
 cd ios && pod install
 ```
@@ -408,7 +408,7 @@ Creates and returns a session object for authentication with the video streaming
 - **iOS users must run `pod install`** after installing native modules
 - **SDK requires camera/microphone permissions** on device
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Video not showing with manifestUrl
 
