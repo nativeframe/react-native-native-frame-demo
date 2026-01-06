@@ -1,6 +1,14 @@
 # react-native-native-frame-demo
 This is a demo of how to use **@video/react-native-sdk**. 
 
+<table>
+  <tr>
+    <td><img src="img/screenshot-4.png" alt="Screenshot of video playback" width="300"/></td>
+    <td><img src="img/screenshot-1.png" alt="Screenshot of video playback" width="300"/></td>
+    <td><img src="img/screenshot-2.png" alt="Screenshot of broadcasting/streaming" width="300"/></td>
+  </tr>
+</table>
+
 ## Running the demo
 ```bash
 cd test-app
@@ -9,12 +17,6 @@ yarn
 yarn android
 yarn ios
 ```
-<table>
-  <tr>
-    <td><img src="img/screenshot-1.png" alt="Screenshot 1" width="300"/></td>
-    <td><img src="img/screenshot-2.png" alt="Screenshot 2" width="300"/></td>
-  </tr>
-</table>
 
 ## New to React Native?
 
