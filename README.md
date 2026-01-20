@@ -145,13 +145,13 @@ import { VideoPlayer, getSession } from '@video/react-native-sdk';
 
 export default function App() {
   const mySession = getSession({
-    backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
+    backendEndpoint: '<your backend endpoint. for example: https://platform.nativeframe.com>', displayName: 'React-Native Demo', 
     streamName: 'react-native-demo'
   });
 
   return (
     <View style={{ flex: 1 }}>
-       <VideoPlayer manifestUrl="<manifest URL>" 
+       <VideoPlayer manifestUrl="<JSON manifest (URL)>" 
           style={{ backgroundColor: '#000' }} session={mySession} />
     </View>
   );

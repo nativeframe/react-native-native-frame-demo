@@ -1,14 +1,12 @@
-import React, { useEffect } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput } from 'react-native';
+import React, { useEffect, useRef } from 'react';
+import { ScrollView, StyleSheet, Text, TextInput, Button } from 'react-native';
 import { useState } from 'react';
-import {
-  getSession, VideoPlayer
-} from '@video/react-native-sdk';
+import { getSession, VideoPlayer } from '@video/react-native-sdk';
 
 export default function PageSimplePlayer() {
   const [manifestUrl, setManifestUrl] = useState('');
   //optional
-  //const videoRef = useRef<any>(null);
+  const videoRef = useRef<any>(null);
   const mySession = getSession({
     backendEndpoint: 'https://platform.nativeframe.com', displayName: 'React-Native Demo', streamName: 'react-native-demo',
   });
@@ -16,8 +14,8 @@ export default function PageSimplePlayer() {
   useEffect(()=>{
     setTimeout(() => {
       //for a quick test, paste your manifest url here:
-      //setManifestUrl('<manifest url>')
-    }, 3000);
+      //setManifestUrl('<manifest url>');
+    }, 2000);
   })
 
   return (
@@ -25,7 +23,8 @@ export default function PageSimplePlayer() {
       <Text>Player (no WebRTC)</Text>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} /* ref={videoRef} */ />
+      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} ref={videoRef} />
+      <Button title='Rewind' onPress={() => { videoRef.current?.rewind(20)}} />
     </ScrollView>
   );
 }
