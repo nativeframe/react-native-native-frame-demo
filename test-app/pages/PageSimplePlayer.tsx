@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { ScrollView, StyleSheet, Text, TextInput, Button } from 'react-native';
 import { useState } from 'react';
-import { getSession, VideoPlayer } from '@video/react-native-sdk';
 import { getSession, VideoPlayer, VideoPlayerMethods } from '@video/react-native-sdk';
 
 export default function PageSimplePlayer() {
