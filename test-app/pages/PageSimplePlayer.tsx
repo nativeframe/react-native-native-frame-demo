@@ -6,7 +6,7 @@ import { getSession, VideoPlayer } from '@video/react-native-sdk';
 export default function PageSimplePlayer() {
   const [manifestUrl, setManifestUrl] = useState('');
   //optional
-  const videoRef = useRef<any>(null);
+  const videoRef = useRef<VideoPlayerMethods>(null);
   const mySession = getSession({
     backendEndpoint: 'https://platform.nativeframe.com', displayName: 'React-Native Demo', streamName: 'react-native-demo',
   });
