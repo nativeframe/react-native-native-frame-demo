@@ -1,10 +1,11 @@
 import React, { useEffect, useRef } from 'react';
-import { ScrollView, StyleSheet, Text, TextInput, Button } from 'react-native';
+import { ScrollView, StyleSheet, Text, TextInput, Button, View } from 'react-native';
 import { useState } from 'react';
 import { getSession, VideoPlayer, VideoPlayerMethods } from '@video/react-native-sdk';
 
 export default function PageSimplePlayer() {
   const [manifestUrl, setManifestUrl] = useState('');
+  const [isTransitioning, setIsTransitioning] = useState(false);
   //optional
   const videoRef = useRef<VideoPlayerMethods>(null);
   const mySession = getSession({
@@ -23,7 +24,13 @@ export default function PageSimplePlayer() {
       <Text>Player (no WebRTC)</Text>
       <Text style={styles.head}>Manifest url:</Text>
       <TextInput style={styles.input} onChangeText={setManifestUrl} value={manifestUrl} />
-      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} ref={videoRef} />
+      <VideoPlayer style={styles.playerContainer} manifestUrl={manifestUrl} session={mySession} ref={videoRef}
+        onLiveDvrStateChange={setIsTransitioning} />
+      {isTransitioning && (
+        <View style={styles.loadingOverlay}>
+          <Text style={styles.loadingText}>Loading...</Text>
+        </View>
+      )}
       <Button title='Rewind' onPress={() => { videoRef.current?.rewind(20)}} />
     </ScrollView>
   );
@@ -66,5 +73,19 @@ const styles = StyleSheet.create({
   overlayText: {
     color: 'white',
     fontWeight: 'bold',
+  },
+  loadingOverlay: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: [{ translateX: -50 }, { translateY: -20 }],
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
+    padding: 15,
+    borderRadius: 8,
+  },
+  loadingText: {
+    color: 'white',
+    fontSize: 16,
+    fontWeight: '600',
   },
 });
