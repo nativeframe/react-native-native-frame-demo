@@ -145,14 +145,18 @@ import { VideoPlayer, getSession } from '@video/react-native-sdk';
 
 export default function App() {
   const mySession = getSession({
-    backendEndpoint: '<your backend endpoint. for example: https://platform.nativeframe.com>', displayName: 'React-Native Demo', 
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
     streamName: 'react-native-demo'
   });
 
   return (
     <View style={{ flex: 1 }}>
-       <VideoPlayer manifestUrl="<JSON manifest (URL)>" 
-          style={{ backgroundColor: '#000' }} session={mySession} />
+      <VideoPlayer
+        manifestUrl="<manifest URL>"
+        session={mySession}
+        style={{ backgroundColor: '#000' }}
+      />
     </View>
   );
 }
@@ -166,7 +170,8 @@ import { Encoder, getSession } from '@video/react-native-sdk';
 
 export default function BroadcastApp() {
   const mySession = getSession({
-    backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
     streamName: 'react-native-demo'
   });
 
@@ -184,12 +189,15 @@ export default function BroadcastApp() {
 
 ## NEW: VideoPlayer Component
 
-**IMPORTANT: HLS-Only Video Player** 
+**IMPORTANT: HLS-Only Video Player**
 
 The `VideoPlayer` component is a simplified video player that **only supports HLS streaming** (no WebRTC). It automatically falls back to HLS when WebRTC is not available, making it ideal for scenarios where you need reliable HLS-only playback.
 
 ### Key Features
 - HLS-only streaming (WebRTC support removed)
+- Live DVR support with automatic mode switching
+- Rewind, seek, and go-live functionality
+- Smooth transitions between live and DVR modes
 
 ### VideoPlayer Props
 
@@ -200,8 +208,12 @@ The `VideoPlayer` component is a simplified video player that **only supports HL
 | `autoplay` | `boolean` | `false` | Start playback automatically when ready |
 | `muted` | `boolean` | `false` | Start with audio muted |
 | `preferredScoreLevel` | `TranscodeScoreLevel \| SourceScoreLevel` | - | Preferred quality level |
+| `videoClientOptions` | `VideoClientOptions` | - | Additional video client configuration options |
 | `debounceInitTime` | `number` | `500` | Debounce time for initialization in milliseconds |
+| `delegate` | `VideoPlayerDelegate` | - | Delegate for handling player events |
 | `style` | `ViewStyle` | - | Style object for the video container |
+| `children` | `ReactNode` | - | Custom UI elements to overlay on the video |
+| `key` | `string \| number` | - | React key prop |
 | `progressUpdateInterval` | `number` | - | Progress updates interval in milliseconds |
 | `resizeMode` | `ResizeMode` | - | Video resize mode ('contain', 'cover', 'stretch') |
 | `preventsDisplaySleepDuringVideoPlayback` | `boolean` | `true` | Prevents device screen sleeping during playback |
@@ -214,7 +226,8 @@ The `VideoPlayer` component is a simplified video player that **only supports HL
 | `onError` | `function` | - | Callback function called on video error |
 | `onFullscreenPlayerDidDismiss` | `function` | - | Callback when fullscreen player is dismissed |
 | `onPlaybackStateChanged` | `function` | - | Callback when playback state changes |
-| `ref` | `RefObject<any> \| RefObject<VideoPlayerMethods>` | - | - Ref object for accessing VideoPlayer methods |
+| `onLiveDvrStateChange` | `function` | - | Callback when transitioning between live and DVR modes |
+| `ref` | `RefObject<any> \| RefObject<VideoPlayerMethods>` | - | Ref object for accessing VideoPlayer methods |
 
 ### VideoPlayer Ref Methods
 
@@ -222,6 +235,7 @@ The `VideoPlayer` component exposes the following methods through ref:
 
 ```typescript
 rewind(seconds: number): void;
+seekTo(seek: number): void;
 goLive(): void;
 ```
 
@@ -230,14 +244,14 @@ goLive(): void;
 ```javascript
 import React, { useRef } from 'react';
 import { View, Button } from 'react-native';
-import { VideoPlayer, getSession } from '@video/react-native-sdk';
+import { VideoPlayer, VideoPlayerMethods, getSession } from '@video/react-native-sdk';
 
 export default function HLSPlayerApp() {
-  //you can also pass <any> or extend VideoPlayerMethods to get strict typing
+  // You can also use <any> or extend VideoPlayerMethods for custom ref typing
   const videoRef = useRef<VideoPlayerMethods>(null);
   const mySession = getSession({
-    backendEndpoint: '<your backend endpoint>', 
-    displayName: 'React-Native Demo', 
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
     streamName: 'react-native-demo'
   });
 
@@ -245,13 +259,17 @@ export default function HLSPlayerApp() {
     videoRef.current?.rewind(10); // Rewind 10 seconds
   };
 
+  const handleSeekTo = () => {
+    videoRef.current?.seekTo(30); // Seek to 30 seconds
+  };
+
   const handleGoLive = () => {
-    videoRef.current?.goLive();
+    videoRef.current?.goLive(); // Jump to live edge
   };
 
   return (
     <View style={{ flex: 1 }}>
-      <VideoPlayer 
+      <VideoPlayer
         ref={videoRef}
         manifestUrl="<manifest URL>"
         session={mySession}
@@ -262,6 +280,7 @@ export default function HLSPlayerApp() {
       />
       <View style={{ flexDirection: 'row', justifyContent: 'space-around', marginTop: 10 }}>
         <Button title="Rewind 10s" onPress={handleRewind} />
+        <Button title="Seek to 30s" onPress={handleSeekTo} />
         <Button title="Go Live" onPress={handleGoLive} />
       </View>
     </View>
@@ -277,45 +296,63 @@ export default function HLSPlayerApp() {
 
 ### ManifestPlayer
 
-The main component for video stream playing.
+The main component for video stream playing with WebRTC and HLS support.
 
 #### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
-| `manifestUrl` | `string` | - | Manifest URL for streaming |
+| `manifestUrl` | `string` | - | **Required** - Manifest URL for streaming |
 | `session` | `Session` | - | **Required** - User session for authentication |
+| `players` | `('webrtc' \| 'native-hls')[]` | `[{ id: 'webrtc' }]` | Array of player drivers to use |
 | `autoplay` | `boolean` | `false` | Start playback automatically when ready |
 | `muted` | `boolean` | `false` | Start with audio muted |
+| `preferredScoreLevel` | `TranscodeScoreLevel \| SourceScoreLevel` | - | Preferred quality level |
+| `videoClientOptions` | `VideoClientOptions` | - | Additional video client configuration options |
+| `debounceInitTime` | `number` | `500` | Debounce time for initialization in milliseconds |
+| `delegate` | `ManifestPlayerDelegate` | - | Delegate for handling player events |
+| `children` | `function` | - | Render prop function receiving manifestPlayer instance |
 
 #### Example
 ```javascript
-<ManifestPlayer 
-  manifestUrl="<manifest URL>"
-  session={session}
-  autoplay
-  muted={false}
->
-  {({ manifestPlayer }) => (
-    <ManifestPlayerVideo manifestPlayer={manifestPlayer} />
-  )}
-</ManifestPlayer>
+import React from 'react';
+import { ManifestPlayer, ManifestPlayerVideo, getSession } from '@video/react-native-sdk';
+
+export default function PlayerApp() {
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
+    streamName: 'react-native-demo'
+  });
+
+  return (
+    <ManifestPlayer
+      manifestUrl="<manifest URL>"
+      session={mySession}
+      autoplay
+      muted={false}
+    >
+      {({ manifestPlayer }) => (
+        <ManifestPlayerVideo manifestPlayer={manifestPlayer} />
+      )}
+    </ManifestPlayer>
+  );
+}
 ```
 
 ### ManifestPlayerVideo
 
-Video player UI component with controls.
+Video player UI component with optional controls.
 
 #### Props
 
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `manifestPlayer` | `ManifestPlayer` | - | **Required** - Player instance |
-| `style` | `ViewStyle` | - | Style object |
-| `showControls` | `boolean` | `false` | Show play/pause/refresh controls (webrtc only) |
+| `style` | `ViewStyle` | - | Style object for the video container |
+| `showControls` | `boolean` | `false` | Show play/pause/refresh controls (WebRTC only) |
 | `showDriver` | `boolean` | `false` | Show current driver info |
 | `showQualitySelect` | `boolean` | `false` | Show quality selection dropdown |
-| `fixedWidth` | `boolean` | `false` | Use fixed width layout |
 
 ### ManifestPlayerVideoCustomControls
 
@@ -326,35 +363,58 @@ Video player component that allows custom overlay UI elements.
 | Prop | Type | Default | Description |
 |------|------|---------|-------------|
 | `manifestPlayer` | `ManifestPlayer` | - | **Required** - Player instance |
-| `style` | `ViewStyle` | - | Style object |
-| `key` | `string` | - | React key prop |
+| `style` | `ViewStyle` | - | Style object for the video container |
+| `key` | `string \| number` | - | React key prop |
 | `children` | `ReactNode` | - | Custom UI elements to overlay on the video |
-| `progressUpdateInterval` | `number` | - | Progress updates interval |
-| `resizeMode` | `string` | - | Video resize mode |
-| `preventsDisplaySleepDuringVideoPlayback` | `boolean` | `true` | Prevents device screen sleeping |
-| `allowsExternalPlayback` | `boolean` | `true` | Enabled external device playback |
-| `paused` | `boolean` | `false` | Video playback state |
-| `muted` | `boolean` | `false` | Audio muting |
-| `rate` | `number` | `1.0` | Playback speed |
-| `onProgress` | `function` | - | Callback for playback progress |
-| `onLoad` | `function` | - | Callback for video load |
-| `onEnd` | `function` | - | Callback for video end |
-| `onError` | `function` | - | Callback for video error |
-| `onFullscreenPlayerDidDismiss` | `function` | - | Callback for fullscreen player |
-| `onPlaybackStateChanged` | `function` | - | Callback for playback |
+| `ref` | `RefObject<any>` | - | Ref object for accessing video element methods |
+| `progressUpdateInterval` | `number` | - | Progress updates interval in milliseconds |
+| `resizeMode` | `ResizeMode` | - | Video resize mode ('contain', 'cover', 'stretch') |
+| `preventsDisplaySleepDuringVideoPlayback` | `boolean` | `true` | Prevents device screen sleeping during playback |
+| `allowsExternalPlayback` | `boolean` | `true` | Allows video to be played on external devices |
+| `paused` | `boolean` | `false` | Controls video playback state |
+| `muted` | `boolean` | `false` | Start with audio muted |
+| `rate` | `number` | `1.0` | Playback speed rate |
+| `onProgress` | `function` | - | Callback for playback progress updates |
+| `onLoad` | `function` | - | Callback function called when video loads |
+| `onEnd` | `function` | - | Callback function called when video ends |
+| `onError` | `function` | - | Callback function called on video error |
+| `onFullscreenPlayerDidDismiss` | `function` | - | Callback when fullscreen player is dismissed |
+| `onPlaybackStateChanged` | `function` | - | Callback when playback state changes |
 
 #### Example
 ```javascript
-<ManifestPlayerVideoCustomControls 
-  style={{ backgroundColor: '#000000' }}
-  manifestPlayer={manifestPlayer}
-  onLoad={() => console.log('loaded')}
->
-  {/* custom UI */}
-  <View style={{ position: 'absolute', top: 10, right: 10, backgroundColor: '#F01B1B' }}>
-    <Text style={{ color: 'white' }}>Custom Overlay</Text>
-  </View>
-</ManifestPlayerVideoCustomControls>
+import React from 'react';
+import { View, Text } from 'react-native';
+import { ManifestPlayer, ManifestPlayerVideoCustomControls, getSession } from '@video/react-native-sdk';
+
+export default function CustomPlayerApp() {
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
+    streamName: 'react-native-demo'
+  });
+
+  return (
+    <ManifestPlayer
+      manifestUrl="<manifest URL>"
+      session={mySession}
+      autoplay
+    >
+      {({ manifestPlayer }) => (
+        <ManifestPlayerVideoCustomControls
+          style={{ backgroundColor: '#000000' }}
+          manifestPlayer={manifestPlayer}
+          onLoad={() => console.log('loaded')}
+        >
+          {/* Custom UI overlay */}
+          <View style={{ position: 'absolute', top: 10, right: 10, backgroundColor: '#F01B1B' }}>
+            <Text style={{ color: 'white' }}>Custom Overlay</Text>
+          </View>
+        </ManifestPlayerVideoCustomControls>
+      )}
+    </ManifestPlayer>
+  );
+}
 ```
 
 <img src="img/screenshot-3.png" alt="Custom UI Screenshot" width="300"/>
@@ -371,13 +431,23 @@ Component for live video broadcasting with camera preview.
 
 #### Example
 ```javascript
+import React from 'react';
+import { View } from 'react-native';
 import { Encoder, getSession } from '@video/react-native-sdk';
-const mySession = getSession({
-   backendEndpoint: '<your backend endpoint>', displayName: 'React-Native Demo', 
-   streamName: 'react-native-demo'
-});
 
-<Encoder session={mySession} />
+export default function BroadcastApp() {
+  const mySession = getSession({
+    backendEndpoint: '<your backend endpoint>',
+    displayName: 'React-Native Demo',
+    streamName: 'react-native-demo'
+  });
+
+  return (
+    <View style={{ flex: 1 }}>
+      <Encoder session={mySession} />
+    </View>
+  );
+}
 ```
 
 **Features:**
@@ -398,6 +468,8 @@ Creates and returns a session object for authentication with the video streaming
 | `backendEndpoint` | `string` | Yes | Your backend endpoint URL |
 | `displayName` | `string` | Yes | Display name for the session |
 | `streamName` | `string` | Yes | Unique stream identifier |
+| `debug` | `boolean` | No | Enable debug mode (default: false) |
+| `supportWebRTC` | `boolean` | No | Enable WebRTC support (default: true) |
 
 **Returns:** `Session` object
 
