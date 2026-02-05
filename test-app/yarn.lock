@@ -2844,12 +2844,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@video/react-native-sdk@npm:1.0.1":
-  version: 1.0.1
-  resolution: "@video/react-native-sdk@npm:1.0.1"
+"@video/react-native-sdk@npm:1.0.3-beta":
+  version: 1.0.3-beta
+  resolution: "@video/react-native-sdk@npm:1.0.3-beta"
   dependencies:
     "@video/video-client-core": 13.2.0
-  checksum: 91ad267624b6ccf91550ef016d46bea8f4377d5a376e120983d041339ef2bf3cc19820c6cde617057605678f1af775e45cece4375ae1ba7ca8ffd761ed01696f
+  checksum: 401978f5e758d6e261da422557c3599fd00398140106eadae7460367039d9af9e1a165530607f8e489dc1bcd646bc0c358e396884c57b01ef6cebfddb06d470d
   languageName: node
   linkType: hard
 
@@ -9235,7 +9235,7 @@ __metadata:
     "@react-native/new-app-screen": 0.80.2
     "@react-native/typescript-config": 0.80.2
     "@types/react": ^18.2.6
-    "@video/react-native-sdk": 1.0.1
+    "@video/react-native-sdk": 1.0.3-beta
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     jest: ^29.6.3
