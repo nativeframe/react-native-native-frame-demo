@@ -2844,12 +2844,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@video/react-native-sdk@npm:1.0.3-beta":
-  version: 1.0.3-beta
-  resolution: "@video/react-native-sdk@npm:1.0.3-beta"
+"@video/react-native-sdk@npm:1.1.0":
+  version: 1.1.0
+  resolution: "@video/react-native-sdk@npm:1.1.0"
   dependencies:
     "@video/video-client-core": 13.2.0
-  checksum: 401978f5e758d6e261da422557c3599fd00398140106eadae7460367039d9af9e1a165530607f8e489dc1bcd646bc0c358e396884c57b01ef6cebfddb06d470d
+  checksum: 81f1c261df65dd7794d3a373c1e85da6553b0316d5fadf652eee0e031a8bad5a745d6b2fb6a69cd1a3c2198d8cac1abf29f96879dabbfed5be721051d7184005
   languageName: node
   linkType: hard
 
@@ -8147,13 +8147,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-native-video@npm:6.16.1":
-  version: 6.16.1
-  resolution: "react-native-video@npm:6.16.1"
+"react-native-video@npm:6.19.0":
+  version: 6.19.0
+  resolution: "react-native-video@npm:6.19.0"
   peerDependencies:
     react: "*"
     react-native: "*"
-  checksum: 40de297ed35527bf2cd77827c9842d51e84df78fbd0a7697235f8d0ca02de2b1a4562e9d3323391d514a9591a5078b10b26eac501ee7eb9a2a7c0c2ae45a90f5
+  checksum: fd320422b57e850d907a8db2849cbd695a0d33c55ce45b603ad5b3e4133f19cac49ffad24bb87e6fc53e472f53d2d5a6799b10969347d116db204a741f5959ea
   languageName: node
   linkType: hard
 
@@ -9235,7 +9235,7 @@ __metadata:
     "@react-native/new-app-screen": 0.80.2
     "@react-native/typescript-config": 0.80.2
     "@types/react": ^18.2.6
-    "@video/react-native-sdk": 1.0.3-beta
+    "@video/react-native-sdk": 1.1.0
     babel-jest: ^29.6.3
     eslint: ^8.19.0
     jest: ^29.6.3
@@ -9246,7 +9246,7 @@ __metadata:
     react-native-safe-area-context: 5.5.1
     react-native-screens: 4.16.0
     react-native-tab-view: ^4.2.2
-    react-native-video: 6.16.1
+    react-native-video: 6.19.0
     react-native-webrtc: 124.0.6
     typescript: 5.0.4
   languageName: unknown

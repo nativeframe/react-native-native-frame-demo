@@ -31,7 +31,10 @@ export default function PageSimplePlayer() {
           <Text style={styles.loadingText}>Loading...</Text>
         </View>
       )}
-      <Button title='Rewind' onPress={() => { videoRef.current?.rewind(20)}} />
+      <View style={styles.buttonRow}>
+        <Button title='Rewind' onPress={() => { videoRef.current?.rewind(20)} } />
+        <Button title='Live' onPress={() => { videoRef.current?.goLive()} } />
+      </View>
     </ScrollView>
   );
 }
@@ -40,6 +43,11 @@ const styles = StyleSheet.create({
   container: {
     flexGrow: 1,
     alignItems: 'center',
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    gap: 10,
+    marginTop: 10,
   },
   head: {
     fontWeight: '600',

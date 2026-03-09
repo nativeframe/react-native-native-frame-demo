@@ -43,7 +43,7 @@ React Native SDK for video streaming.
 yarn add @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-yarn add react-native-video@6.16.1 \
+yarn add react-native-video@6.19.0 \
          react-native-webrtc@124.0.6 \
          @react-native-picker/picker@2.11.1 \
          react-native-safe-area-context@5.5.1 \
@@ -56,7 +56,7 @@ yarn add react-native-video@6.16.1 \
 npm install @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-npm install react-native-video@6.16.1 \
+npm install react-native-video@6.19.0 \
            react-native-webrtc@124.0.6 \
            @react-native-picker/picker@2.11.1 \
            react-native-safe-area-context@5.5.1 \
@@ -69,7 +69,7 @@ npm install react-native-video@6.16.1 \
 pnpm add @video/react-native-sdk
 
 # Install required peer dependencies with specific versions
-pnpm add react-native-video@6.16.1 \
+pnpm add react-native-video@6.19.0 \
          react-native-webrtc@124.0.6 \
          @react-native-picker/picker@2.11.1 \
          react-native-safe-area-context@5.5.1 \
@@ -117,17 +117,17 @@ Add to `.npmrc` in your project root:
 
 #### yarn
 ```bash  
-yarn add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+yarn add @video/react-native-sdk react-native-video@6.19.0 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### npm (7+)
 ```bash
-npm install @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+npm install @video/react-native-sdk react-native-video@6.19.0 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 #### pnpm
 ```bash
-pnpm add @video/react-native-sdk react-native-video@6.16.1 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
+pnpm add @video/react-native-sdk react-native-video@6.19.0 react-native-webrtc@124.0.6 @react-native-picker/picker@2.11.1 react-native-safe-area-context@5.5.1 react-native-screens@4.16.0
 ```
 
 ## Quick Start
@@ -237,6 +237,7 @@ The `VideoPlayer` component exposes the following methods through ref:
 rewind(seconds: number): void;
 seekTo(seek: number): void;
 goLive(): void;
+refetch(): void;
 ```
 
 ### VideoPlayer Example
@@ -267,6 +268,10 @@ export default function HLSPlayerApp() {
     videoRef.current?.goLive(); // Jump to live edge
   };
 
+  const handleRefetch = () => {
+    videoRef.current?.refetch();
+  };
+
   return (
     <View style={{ flex: 1 }}>
       <VideoPlayer
@@ -282,6 +287,7 @@ export default function HLSPlayerApp() {
         <Button title="Rewind 10s" onPress={handleRewind} />
         <Button title="Seek to 30s" onPress={handleSeekTo} />
         <Button title="Go Live" onPress={handleGoLive} />
+        <Button title="Refetch" onPress={handleRefetch} />
       </View>
     </View>
   );
